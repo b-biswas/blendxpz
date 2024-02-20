@@ -65,14 +65,13 @@ def train_pz(
             Note that the progress bar is not particularly useful when logged to a file, so verbose=2 is recommended when not running interactively (eg, in a production environment).
 
         """
-        encoder.summary()
+        #encoder.summary()
 
         # LOG.info("Initial learning rate: " + str(lr))
 
         LOG.info("Number of epochs: " + str(epochs))
 
         linked_pz_model = create_vae_pz_model(encoder, input_shape, latent_dim)
-        print(linked_pz_model.summary())
 
         if loss_function is None:
             print("pass valid loss function")
@@ -81,6 +80,7 @@ def train_pz(
             loss=loss_function,
             experimental_run_tf_function=False,
         )
+        print(linked_pz_model.summary())
         hist = linked_pz_model.fit(
             x=train_generator[0]
             if isinstance(train_generator, tuple)
