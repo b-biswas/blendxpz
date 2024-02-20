@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "bpz"
+version = "0.0.1"
+description = "Evaluate pz effects due to blending"
+authors = ["Biswajit Biswas <biswas@apc.in2p3.fr>"]
+readme = "README.md"
+keywords = ["galaxies", "deblending", "cosmology", "photo-z"]
+license = "MIT"
+include = ["bpz/data/*"]
+repository = "https://github.com/b-biswas/blendxpz"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
