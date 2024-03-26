@@ -32,11 +32,6 @@ def deblender_loss_fn_wrapper(
         function to compute the loss using SSIM weight.
 
     """
-    if use_ssim and not isinstance(ch_alpha, changeAlpha):
-        raise ValueError(
-            "Inappropriate value for changeAlpha. Must been an instance of madness_deblender.callbacks.changeAlpha"
-        )
-
     @tf.function
     def deblender_ssim_loss_fn(y, predicted):
         """Compute the loss under predicted distribution, weighted by the SSIM.
