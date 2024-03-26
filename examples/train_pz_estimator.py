@@ -11,12 +11,12 @@ import tensorflow_probability as tfp
 import yaml
 from galcheat.utilities import mean_sky_level
 
-from maddeb.callbacks import define_callbacks
-from maddeb.dataset_generator import batched_CATSIMDataset_pz
-from maddeb.FlowVAEnet import FlowVAEnet
+from madness_deblender.callbacks import define_callbacks
+from madness_deblender.dataset_generator import batched_CATSIMDataset_pz
+from madness_deblender.FlowVAEnet import FlowVAEnet
 
-import maddeb.utils as maddeb_utils
-#from maddeb.utils import get_data_dir_path, get_maddeb_config_path
+import madness_deblender.utils as madness_deblender_utils
+#from madness_deblender.utils import get_data_dir_path, get_madness_deblender_config_path
 
 from bpz.losses import pz_loss
 from bpz.pz_estimator import train_pz
@@ -41,10 +41,10 @@ latent_dim = 16
 linear_norm_coeff = 10000
 patience = 30
 
-with open(maddeb_utils.get_maddeb_config_path()) as f:
-    maddeb_config = yaml.safe_load(f)
+with open(madness_deblender_utils.get_madness_deblender_config_path()) as f:
+    madness_deblender_config = yaml.safe_load(f)
 
-survey_name = maddeb_config["survey_name"]
+survey_name = madness_deblender_config["survey_name"]
 
 if survey_name not in ["LSST", "HSC"]:
     raise ValueError(
@@ -64,7 +64,7 @@ kl_prior = tfd.Independent(
     tfd.Normal(loc=tf.zeros(latent_dim), scale=1), reinterpreted_batch_ndims=1
 )
 # Keras Callbacks
-loadweights_path = maddeb_utils.get_data_dir_path()
+loadweights_path = madness_deblender_utils.get_data_dir_path()
 saveweights_path = bpz_utils.get_data_dir_path()
 
 # path_weights = os.path.join(data_path, f"catsim_kl{kl_weight_exp}{latent_dim}d")
@@ -77,13 +77,12 @@ ds_isolated_train, ds_isolated_val = batched_CATSIMDataset_pz(
     train_data_dir=None,
     val_data_dir=None,
     tf_dataset_dir=os.path.join(
-        maddeb_config["TF_DATASET_PATH"][survey_name], "isolated_tfDataset"
+        madness_deblender_config["TF_DATASET_PATH"][survey_name], "isolated_tfDataset"
     ),
     linear_norm_coeff=linear_norm_coeff,
     batch_size=batch_size,
     x_col_name="blended_gal_stamps",
 )
-
 
 callbacks = define_callbacks(
     os.path.join(path_saveweights, "pz"),
@@ -96,7 +95,6 @@ f_net.load_vae_weights(
     weights_path=os.path.join(path_loadweights, "vae/val_loss")
 )
 
-
 hist_pz = train_pz(
     input_shape=[45, 45, 5],
     encoder=f_net.encoder,
@@ -105,7 +103,7 @@ hist_pz = train_pz(
     callbacks=callbacks,
     loss_function=pz_loss,
     latent_dim = 16,    
-    optimizer=tf.keras.optimizers.Adam(1e-4, clipvalue=0.1),
+    optimizer=tf.keras.optimizers.Adam(1e-5, clipvalue=0.1),
     epochs=100,
     verbose=1,
 )
