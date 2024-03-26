@@ -3,32 +3,35 @@ import logging
 
 import tensorflow as tf 
 import tensorflow_probability as tfp
-from maddeb.model import create_pz_estimator
+from bpz.model import create_pz_estimator
 
-from tensorflow.keras.layers import Input
-from tensorflow.keras.models import Model
+from tensorflow import keras
+from keras.layers import Input
+from keras.models import Model
+
 
 tfd = tfp.distributions
 
 LOG = logging.getLogger(__name__)
 
-def create_vae_pz_model(encoder, input_shape, latent_dim):
+def create_vae_pz_model(encoder, decoder, input_shape, latent_dim):
     encoder.trainable=False
     #Link the models 
     x_input = Input(shape=(input_shape))
     z = tfp.layers.MultivariateNormalTriL(
         latent_dim, name="latent_space",
-        convert_to_tensor_fn=tfd.Distribution.mean,
+        convert_to_tensor_fn=tfd.Distribution.sample,
     )(encoder(x_input))
-
+    
     pz_estimator = create_pz_estimator(latent_dim=latent_dim)
 
-    return Model(inputs=x_input, outputs=pz_estimator(z))
+    return Model(inputs=x_input, outputs=(decoder(z), pz_estimator(z))), pz_estimator
 
 
 def train_pz(
         input_shape,
         encoder,
+        decoder,
         train_generator,
         validation_generator,
         callbacks,
@@ -71,7 +74,9 @@ def train_pz(
 
         LOG.info("Number of epochs: " + str(epochs))
 
-        linked_pz_model = create_vae_pz_model(encoder, input_shape, latent_dim)
+        encoder.trainable = True
+        decoder.trainable = True
+        linked_pz_model, pz_estimator = create_vae_pz_model(encoder, decoder, input_shape, latent_dim)
 
         if loss_function is None:
             print("pass valid loss function")
@@ -81,6 +86,7 @@ def train_pz(
             experimental_run_tf_function=False,
         )
         print(linked_pz_model.summary())
+        print(pz_estimator.summary())
         hist = linked_pz_model.fit(
             x=train_generator[0]
             if isinstance(train_generator, tuple)

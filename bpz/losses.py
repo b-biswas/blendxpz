@@ -1,6 +1,6 @@
 import tensorflow as tf 
 
-from maddeb.callbacks import changeAlpha
+from madness_deblender.callbacks import changeAlpha
 
 @tf.function
 def pz_loss(pz, predicted_pz):
@@ -34,7 +34,7 @@ def deblender_loss_fn_wrapper(
     """
     if use_ssim and not isinstance(ch_alpha, changeAlpha):
         raise ValueError(
-            "Inappropriate value for changeAlpha. Must been an instance of maddeb.callbacks.changeAlpha"
+            "Inappropriate value for changeAlpha. Must been an instance of madness_deblender.callbacks.changeAlpha"
         )
 
     @tf.function
