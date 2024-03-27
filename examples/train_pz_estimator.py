@@ -18,9 +18,9 @@ from madness_deblender.FlowVAEnet import FlowVAEnet
 import madness_deblender.utils as madness_deblender_utils
 #from madness_deblender.utils import get_data_dir_path, get_madness_deblender_config_path
 
-from bpz.losses import pz_loss
-from bpz.pz_estimator import train_pz
-import bpz.utils as bpz_utils
+from blendxpz.losses import pz_loss
+from blendxpz.pz_estimator import train_pz
+import blendxpz.utils as bpz_utils
 
 
 
