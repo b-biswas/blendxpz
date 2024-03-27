@@ -1,10 +1,11 @@
 """Define custom sampling for BTK"""
 
 import warnings
-import numpy as np
 
+import numpy as np
 from btk.sampling_functions import SamplingFunction
 from btk.utils import DEFAULT_SEED
+
 
 class FixedDistSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
@@ -32,7 +33,7 @@ class FixedDistSampling(SamplingFunction):
         index_range: tuple
             range to indexes to sample galaxies from the catalog.
         shift: int
-            Magnitude of the the shift. 
+            Magnitude of the the shift.
             eg. if shift =1, along each coordinate, distace can be either one or 1,
             but not both zeroes at the same time.
         unique: bool
@@ -60,11 +61,11 @@ class FixedDistSampling(SamplingFunction):
         Returns an astropy table with entries corresponding to a blend centered close to postage
         stamp center.
 
-        Function selects entries from the input table such that the number of objects per blend 
-        is set at a random integer ``self.min_number`` and ``self.max_number`` (both inclusive). 
+        Function selects entries from the input table such that the number of objects per blend
+        is set at a random integer ``self.min_number`` and ``self.max_number`` (both inclusive).
         If ``unique`` is set to True, the blend table the table is sampled sequentially, untill
         all galaxies a exhausted. While the table entries are sampled randomly ``unique`` is False.
-        The centers are randomly places such that the distance from the center is one pixel 
+        The centers are randomly places such that the distance from the center is one pixel
         (in each direction including diagonally).
 
         Parameters
@@ -98,10 +99,10 @@ class FixedDistSampling(SamplingFunction):
             blend_table = table[indexes]
         blend_table["ra"] = 0.0
         blend_table["dec"] = 0.0
-        
+
         x_peak, y_peak = 0
         possible_values = np.array([-self.shift, 0, self.shift])
-        while (x_peak==0) & (y_peak ==0):
+        while (x_peak == 0) & (y_peak == 0):
             x_peak = np.choice(possible_values)
             y_peak = np.choice(possible_values)
 

@@ -1,12 +1,13 @@
-import tensorflow as tf 
-
+import tensorflow as tf
 from madness_deblender.callbacks import changeAlpha
+
 
 @tf.function
 def pz_loss(pz, predicted_pz):
-    #loss = -tfd.Normal(loc=predicted_pz[:, 0], scale=predicted_pz[:, 1]).log_prob(pz)
-    loss = tf.abs(predicted_pz-pz)
+    # loss = -tfd.Normal(loc=predicted_pz[:, 0], scale=predicted_pz[:, 1]).log_prob(pz)
+    loss = tf.abs(predicted_pz - pz)
     return tf.reduce_mean(loss)
+
 
 @tf.function
 def deblender_loss_fn_wrapper(
@@ -32,6 +33,7 @@ def deblender_loss_fn_wrapper(
         function to compute the loss using SSIM weight.
 
     """
+
     @tf.function
     def deblender_ssim_loss_fn(y, predicted):
         """Compute the loss under predicted distribution, weighted by the SSIM.
@@ -52,7 +54,8 @@ def deblender_loss_fn_wrapper(
         galaxy, pz = y
         predicted_galaxy, predicted_pz = predicted
         loss = tf.reduce_sum(
-            (galaxy - predicted_galaxy) ** 2 / (sigma_cutoff**2 + galaxy / linear_norm_coeff),
+            (galaxy - predicted_galaxy) ** 2
+            / (sigma_cutoff**2 + galaxy / linear_norm_coeff),
             axis=[1, 2, 3],
         )
 
