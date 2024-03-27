@@ -1,9 +1,10 @@
 import tensorflow as tf
-from tensorflow.keras.layers import (
+from tensorflow import keras 
+from keras.layers import (
     Dense,
     Input,
 )
-from tensorflow.keras.models import Model
+from keras.models import Model
 
 def create_pz_estimator(latent_dim):
 
