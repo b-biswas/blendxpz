@@ -100,8 +100,8 @@ class FixedDistSampling(SamplingFunction):
         blend_table["ra"] = 0.0
         blend_table["dec"] = 0.0
 
-        x_peak = self.rng.uniform(-self.shift, self.shift) 
-        y_peak = (self.shift**2-x_peak**2)**.5
+        x_peak = self.rng.uniform(-self.shift, self.shift)
+        y_peak = (self.shift**2 - x_peak**2) ** 0.5
 
         blend_table["ra"] += x_peak
         blend_table["dec"] += y_peak
