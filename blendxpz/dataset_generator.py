@@ -2,6 +2,7 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from madness_deblender import loadCATSIMDataset
 
+
 def batched_CATSIMDataset_pz(
     tf_dataset_dir,
     linear_norm_coeff,
@@ -42,6 +43,7 @@ def batched_CATSIMDataset_pz(
         prefetched validation dataset
 
     """
+
     # normalized train and val dataset generator
     def preprocess_batch(ds):
         """Preprocessing function.

@@ -5,23 +5,20 @@ import os
 import sys
 
 import galcheat
+import madness_deblender.utils as madness_deblender_utils
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 import yaml
-from galcheat.utilities import mean_sky_level
-
 from madness_deblender.callbacks import define_callbacks
 from madness_deblender.dataset_generator import batched_CATSIMDataset_pz
 from madness_deblender.FlowVAEnet import FlowVAEnet
 
-import madness_deblender.utils as madness_deblender_utils
-#from madness_deblender.utils import get_data_dir_path, get_madness_deblender_config_path
-
+import blendxpz.utils as bpz_utils
 from blendxpz.losses import pz_loss
 from blendxpz.pz_estimator import train_pz
-import blendxpz.utils as bpz_utils
 
+# from madness_deblender.utils import get_data_dir_path, get_madness_deblender_config_path
 
 
 tfd = tfp.distributions
@@ -91,9 +88,7 @@ callbacks = define_callbacks(
 )
 
 f_net = FlowVAEnet(survey=survey)
-f_net.load_vae_weights(
-    weights_path=os.path.join(path_loadweights, "vae/val_loss")
-)
+f_net.load_vae_weights(weights_path=os.path.join(path_loadweights, "vae/val_loss"))
 
 hist_pz = train_pz(
     input_shape=[45, 45, 5],
@@ -102,7 +97,7 @@ hist_pz = train_pz(
     validation_generator=ds_isolated_val,
     callbacks=callbacks,
     loss_function=pz_loss,
-    latent_dim = 16,    
+    latent_dim=16,
     optimizer=tf.keras.optimizers.Adam(1e-5, clipvalue=0.1),
     epochs=100,
     verbose=1,
