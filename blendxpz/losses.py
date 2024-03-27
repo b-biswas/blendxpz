@@ -1,4 +1,5 @@
-import tensorflow as tf 
+import tensorflow as tf
+
 
 @tf.function
 def pz_loss(pz, predicted_pz):

@@ -2,9 +2,6 @@ import logging
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-
-from blendxpz.model import create_pz_estimator
-
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 
