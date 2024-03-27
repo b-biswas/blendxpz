@@ -9,7 +9,6 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 import yaml
-from galcheat.utilities import mean_sky_level
 
 from madness_deblender.callbacks import define_callbacks
 from madness_deblender.dataset_generator import batched_CATSIMDataset_pz
