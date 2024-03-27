@@ -9,6 +9,13 @@ license = "MIT"
 include = ["blendxpz/data/*"]
 repository = "https://github.com/b-biswas/blendxpz"
 
+[tool.poetry.dependencies]
+numpy = "*"
+astropy = "*"
+blending_toolkit = "1.0.0b2"
+galsim = "*"
+matplotlib = "*"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
