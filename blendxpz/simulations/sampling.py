@@ -60,13 +60,12 @@ class FixedDistSampling(SamplingFunction):
         Returns an astropy table with entries corresponding to a blend centered close to postage
         stamp center.
 
-        Function selects entries from the input table that are brighter than 25.3 mag
-        in the i band. Number of objects per blend is set at a random integer
-        between 1 and ``self.max_number``. The blend table is then randomly sampled
-        entries from the table after selection cuts. The centers are randomly
-        distributed within 1/10th of the stamp size. Here even though the galaxies
-        are sampled from a CatSim catalog, their spatial location are not
-        representative of real blends.
+        Function selects entries from the input table such that the number of objects per blend 
+        is set at a random integer ``self.min_number`` and ``self.max_number`` (both inclusive). 
+        If ``unique`` is set to True, the blend table the table is sampled sequentially, untill
+        all galaxies a exhausted. While the table entries are sampled randomly ``unique`` is False.
+        The centers are randomly places such that the distance from the center is one pixel 
+        (in each direction including diagonally).
 
         Parameters
         ----------
