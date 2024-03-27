@@ -6,7 +6,7 @@ import numpy as np
 from btk.sampling_functions import SamplingFunction
 from btk.utils import DEFAULT_SEED
 
-class CustomSampling(SamplingFunction):
+class FixedDistSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
 
     def __init__(
