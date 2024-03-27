@@ -100,6 +100,7 @@ class FixedDistSampling(SamplingFunction):
         blend_table["ra"] = 0.0
         blend_table["dec"] = 0.0
 
+        # The galaxy will be on the boundary of the circle of the given radius
         x_peak = self.rng.uniform(-self.shift, self.shift)
         y_peak = (self.shift**2 - x_peak**2) ** 0.5
 
