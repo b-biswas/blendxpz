@@ -2,4 +2,4 @@
 
 from importlib import metadata
 
-__version__ = metadata.version("bpz")
+__version__ = metadata.version("blendxpz")
