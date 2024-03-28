@@ -3,43 +3,41 @@ repos:
   rev: v4.5.0
   hooks:
     - id: end-of-file-fixer
+      exclude: ^data/
     - id: requirements-txt-fixer
+      exclude: ^data/
     - id: trailing-whitespace
+      exclude: ^data/
       args: [--markdown-linebreak-ext=md]
 - repo: https://github.com/PyCQA/isort
   rev: 5.13.2
   hooks:
     - id: isort
+      exclude: ^data/
       args: [--profile, black]
 - repo: https://github.com/asottile/pyupgrade
   rev: v3.15.1
   hooks:
     - id: pyupgrade
+      exclude: ^data/
       args: [--py37-plus]
 - repo: https://github.com/PyCQA/flake8
   rev: 4.0.1
   hooks:
-   - id: flake8
-     additional_dependencies: [flake8-typing-imports==1.7.0]
-     args: ['--ignore=E501,E203,E731,W503']
-     exclude: |
-            (?x)^(
-                maddeb/__init__.py|
-                btksims/btksims/__init__.py|
-            )$
+    - id: flake8
+      exclude: ^data/
+      additional_dependencies: [flake8-typing-imports==1.7.0]
+      args: ['--ignore=E501,E203,E731,W503']
 - repo: https://github.com/psf/black
   rev: 24.3.0
   hooks:
     - id: black
-      exclude: |
-            (?x)^(
-                pyproject.toml|
-                btksims/pyproject.toml|
-            )$
+      exclude: ^data/
 - repo: https://github.com/kynan/nbstripout
   rev: 0.7.1
   hooks:
     - id: nbstripout
+      exclude: ^data/
       args:
             - --keep-output
 # - repo: https://github.com/pycqa/pydocstyle
