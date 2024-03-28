@@ -104,6 +104,9 @@ class FixedDistSampling(SamplingFunction):
         x_peak = self.rng.uniform(-self.shift, self.shift)
         y_peak = (self.shift**2 - x_peak**2) ** 0.5
 
+        if self.rng.unifrom() <.5:
+            y_peak = -y_peak
+
         blend_table["ra"] += x_peak
         blend_table["dec"] += y_peak
 
