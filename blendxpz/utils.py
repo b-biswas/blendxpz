@@ -1,4 +1,5 @@
-import os 
+import os
+
 
 def get_data_dir_path():
     """Fetch path to the data folder of maddeb.
