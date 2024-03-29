@@ -6,7 +6,7 @@ HSC:
     "real_galaxy_catalog_26_extension_example.fits",
     "real_galaxy_catalog_26_extension_example_fits.fits",
   ]
-  REAL_DATA_DIR: "../data/real_hsc_data"
+  REAL_DATA_DIR: "../data/hsc_real_data"
   AVAILABLE_COADDS: [
     "9813_4,3",
     "9813_4,4",
