@@ -1,5 +1,7 @@
 SURVEY_NAME: "HSC"
 HSC:
+  NUM_REAL_GAL_TO_USE: 2
+  NUM_BLENDS_PER_GAL: 3
   STAMP_PIXEL_SIZE: 45
   GALSIM_COSMOS_DATA_DIR: "../data/galsim_cosmos_data"
   CATALOG_NAMES: [
@@ -11,3 +13,4 @@ HSC:
     "9813_4,3",
     "9813_4,4",
   ]
+  SIMULATION_SAVE_DIR: "../data/simulated_blends"
