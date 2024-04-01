@@ -103,7 +103,7 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
     ssi_galaxies, blend = ssi(draw_generator, isolated_galaxy)
 
     # Now save files
-    gal_key = gal_file_name.split(".")[0] # fetches the name of galaxy
+    gal_key = gal_file_name.split(".")[0]  # fetches the name of galaxy
 
     # Isolated central galaxy for blended image (Not required if central gal is real)
     save_file_name = os.path.join(
