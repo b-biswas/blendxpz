@@ -9,10 +9,11 @@ from astropy.io import fits
 
 from blendxpz.simulations.sampling import FixedDistSampling
 from blendxpz.simulations.ssi import ssi
-from blendxpz.utils import get_blendxpz_config_path
+from blendxpz.utils import get_blendxpz_config_path, get_data_dir_path
 
 with open(get_blendxpz_config_path()) as f:
     blendxpz_config = yaml.safe_load(f)
+data_dir_path = get_data_dir_path()
 
 survey_name = blendxpz_config["SURVEY_NAME"]
 config = blendxpz_config[survey_name]
@@ -21,7 +22,7 @@ stamp_pixel_size = config["STAMP_PIXEL_SIZE"]
 # Set up BTK parameters
 pixel_shift_distance = 10
 
-CATALOG_DIR = config["GALSIM_COSMOS_DATA_DIR"]
+CATALOG_DIR = os.path.join(data_dir_path, config["GALSIM_COSMOS_DATA_DIR"])
 CATALOG_NAMES = config["CATALOG_NAMES"]
 CATALOG_PATHS = [
     os.path.join(CATALOG_DIR, CATALOG_NAME) for CATALOG_NAME in CATALOG_NAMES
@@ -56,7 +57,6 @@ sampling_function = FixedDistSampling(
 # Specify all parameters except the PSF (depends upon the coadd we sample from)
 for f in filters:
     filt = survey.get_filter(f)
-    filt.psf = lambda: btk.survey.get_psf_from_file(os.path.join(psf_dir, f), survey)
     filt.zeropoint = 27 * u.mag
     filt.full_exposure_time = 1 * u.s
 
@@ -65,7 +65,7 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
 
     # Sample a coadd
     coadd = random.choice(config["AVAILABLE_COADDS"])
-    image_dir = os.path.join(config["REAL_DATA_DIR"], coadd, "images")
+    image_dir = os.path.join(data_dir_path, config["REAL_DATA_DIR"], coadd, "images")
     gal_file_name = random.choice(os.listdir(image_dir))
     gal_file_path = os.path.join(image_dir, gal_file_name)
 
@@ -80,7 +80,7 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
     ]
 
     # Set the PSF
-    psf_dir = os.path.join(config["REAL_DATA_DIR"], coadd, "psfs")
+    psf_dir = os.path.join(data_dir_path, config["REAL_DATA_DIR"], coadd, "psfs")
     for f in filters:
         filt.psf = lambda: btk.survey.get_psf_from_file(
             os.path.join(psf_dir, f), survey
@@ -101,25 +101,22 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
 
     # run SSI
     ssi_galaxies, blend = ssi(draw_generator, isolated_galaxy)
-    ssi_galaxies.shape
 
-    gal_key = gal_file_name.split(".")[0]
+    # Now save files
+    gal_key = gal_file_name.split(".")[0] # fetches the name of galaxy
 
+    # Isolated central galaxy for blended image (Not required if central gal is real)
     save_file_name = os.path.join(
-        config["SIMULATION_SAVE_DIR"],
-        gal_key + ".pkl",
-    )
-
-    # Isolated galaxy for blended image
-    save_file_name = os.path.join(
+        data_dir_path,
         config["SIMULATION_SAVE_DIR"],
         "isolated_" + gal_key + ".pkl",
     )
     with open(save_file_name, "wb") as pickle_file:
         pickle.dump(isolated_galaxy, pickle_file)
 
-    # Corresponding blended scenes
+    # Corresponding blended scenes, for each galaxy 'config["NUM_BLENDS_PER_GAL"]' blends
     save_file_name = os.path.join(
+        data_dir_path,
         config["SIMULATION_SAVE_DIR"],
         "blended_" + gal_key + ".pkl",
     )
@@ -128,6 +125,7 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
 
     # BTK catalog list
     save_file_name = os.path.join(
+        data_dir_path,
         config["SIMULATION_SAVE_DIR"],
         "btk_catalog_list" + gal_key + ".pkl",
     )
