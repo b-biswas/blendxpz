@@ -131,3 +131,5 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
     )
     with open(save_file_name, "wb") as pickle_file:
         pickle.dump(blend.catalog_list, pickle_file)
+
+    print(f"Saving Galaxy: {gal_key}")
