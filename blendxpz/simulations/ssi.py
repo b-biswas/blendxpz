@@ -2,7 +2,7 @@
 
 
 def ssi(btk_draw_generator, isolated_galaxy):
-    """Inject sources into the stamp.
+    """Inject sources into a simulated stamp.
 
     Parameters
     """

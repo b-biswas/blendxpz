@@ -3,7 +3,7 @@ repos:
   rev: v4.5.0
   hooks:
     - id: end-of-file-fixer
-      exclude: ^data/
+      exclude: ^blendxpz/data/
     - id: requirements-txt-fixer
       exclude: ^data/
     - id: trailing-whitespace
@@ -13,31 +13,31 @@ repos:
   rev: 5.13.2
   hooks:
     - id: isort
-      exclude: ^data/
+      exclude: ^blendxpz/data/
       args: [--profile, black]
 - repo: https://github.com/asottile/pyupgrade
   rev: v3.15.1
   hooks:
     - id: pyupgrade
-      exclude: ^data/
+      exclude: ^blendxpz/data/
       args: [--py37-plus]
 - repo: https://github.com/PyCQA/flake8
   rev: 4.0.1
   hooks:
     - id: flake8
-      exclude: ^data/
+      exclude: ^blendxpz/data/
       additional_dependencies: [flake8-typing-imports==1.7.0]
       args: ['--ignore=E501,E203,E731,W503']
 - repo: https://github.com/psf/black
   rev: 24.3.0
   hooks:
     - id: black
-      exclude: ^data/
+      exclude: ^blendxpz/data/
 - repo: https://github.com/kynan/nbstripout
   rev: 0.7.1
   hooks:
     - id: nbstripout
-      exclude: ^data/
+      exclude: ^blendxpz/data/
       args:
             - --keep-output
 # - repo: https://github.com/pycqa/pydocstyle
