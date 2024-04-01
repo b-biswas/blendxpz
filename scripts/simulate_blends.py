@@ -1,11 +1,11 @@
 import os
-import pickle
 import random
 
 import astropy.units as u
 import btk
 import yaml
 from astropy.io import fits
+from astropy.table import vstack
 
 from blendxpz.simulations.sampling import FixedDistSampling
 from blendxpz.simulations.ssi import ssi
@@ -103,33 +103,17 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
     ssi_galaxies, blend = ssi(draw_generator, isolated_galaxy)
 
     # Now save files
-    gal_key = gal_file_name.split(".")[0]  # fetches the name of galaxy
+    data = vstack(blend.catalog_list)
+    data["blend"] = ssi_galaxies
 
-    # Isolated central galaxy for blended image (Not required if central gal is real)
-    save_file_name = os.path.join(
-        data_dir_path,
-        config["SIMULATION_SAVE_DIR"],
-        "isolated_" + gal_key + ".pkl",
-    )
-    with open(save_file_name, "wb") as pickle_file:
-        pickle.dump(isolated_galaxy, pickle_file)
+    gal_key = gal_file_name.split(".")[0]
 
-    # Corresponding blended scenes, for each galaxy 'config["NUM_BLENDS_PER_GAL"]' blends
+    # Save blended scenes
     save_file_name = os.path.join(
         data_dir_path,
         config["SIMULATION_SAVE_DIR"],
         "blended_" + gal_key + ".pkl",
     )
-    with open(save_file_name, "wb") as pickle_file:
-        pickle.dump(ssi_galaxies, pickle_file)
-
-    # BTK catalog list
-    save_file_name = os.path.join(
-        data_dir_path,
-        config["SIMULATION_SAVE_DIR"],
-        "btk_catalog_list" + gal_key + ".pkl",
-    )
-    with open(save_file_name, "wb") as pickle_file:
-        pickle.dump(blend.catalog_list, pickle_file)
+    data.write(save_file_name, format="fits", overwrite=True)
 
     print(f"Saving Galaxy: {gal_key}")

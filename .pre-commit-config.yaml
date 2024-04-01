@@ -5,9 +5,9 @@ repos:
     - id: end-of-file-fixer
       exclude: ^blendxpz/data/
     - id: requirements-txt-fixer
-      exclude: ^data/
+      exclude: ^blendxpz/data/
     - id: trailing-whitespace
-      exclude: ^data/
+      exclude: ^blendxpz/data/
       args: [--markdown-linebreak-ext=md]
 - repo: https://github.com/PyCQA/isort
   rev: 5.13.2
@@ -25,7 +25,7 @@ repos:
   rev: 4.0.1
   hooks:
     - id: flake8
-      exclude: ^blendxpz/data/
+      exclude: ^blendxpz/data
       additional_dependencies: [flake8-typing-imports==1.7.0]
       args: ['--ignore=E501,E203,E731,W503']
 - repo: https://github.com/psf/black
