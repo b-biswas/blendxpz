@@ -9,8 +9,5 @@ HSC:
     "real_galaxy_catalog_26_extension_example_fits.fits",
   ]
   REAL_DATA_DIR: "hsc_real_data"
-  AVAILABLE_COADDS: [
-    "9813_4,3",
-    "9813_4,4",
-  ]
   SIMULATION_SAVE_DIR: "simulated_blends"
+  DEFAULT_SEED: 9

@@ -1,3 +1,4 @@
+import glob
 import os
 import random
 
@@ -18,6 +19,15 @@ data_dir_path = get_data_dir_path()
 survey_name = blendxpz_config["SURVEY_NAME"]
 config = blendxpz_config[survey_name]
 stamp_pixel_size = config["STAMP_PIXEL_SIZE"]
+
+random.seed = config["DEFAULT_SEED"]
+
+galaxy_image_paths = glob.glob(
+    os.path.join(data_dir_path, "**", "images", "*.fits"), recursive=True
+)
+if config["NUM_REAL_GAL_TO_USE"] > len(galaxy_image_paths):
+    raise ValueError("Not enough real galaxies.")
+random.shuffle(galaxy_image_paths)
 
 # Set up BTK parameters
 pixel_shift_distance = 10
@@ -60,14 +70,14 @@ for f in filters:
     filt.zeropoint = 27 * u.mag
     filt.full_exposure_time = 1 * u.s
 
-# Start simulating galaxies
-for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
 
+# Start simulating galaxies
+for real_gal_num, real_galaxy_num in enumerate(range(config["NUM_REAL_GAL_TO_USE"])):
+
+    gal_file_path = galaxy_image_paths[real_gal_num]
+    gal_file_name = gal_file_path.split("/")[-1]
     # Sample a coadd
-    coadd = random.choice(config["AVAILABLE_COADDS"])
-    image_dir = os.path.join(data_dir_path, config["REAL_DATA_DIR"], coadd, "images")
-    gal_file_name = random.choice(os.listdir(image_dir))
-    gal_file_path = os.path.join(image_dir, gal_file_name)
+    tract, patch, gal_number = gal_file_name.split("_")
 
     isolated_galaxy = fits.getdata(gal_file_path)
 
@@ -80,7 +90,9 @@ for real_galaxy_num in range(config["NUM_REAL_GAL_TO_USE"]):
     ]
 
     # Set the PSF
-    psf_dir = os.path.join(data_dir_path, config["REAL_DATA_DIR"], coadd, "psfs")
+    psf_dir = os.path.join(
+        data_dir_path, config["REAL_DATA_DIR"], tract + "_" + patch, "psfs"
+    )
     for f in filters:
         filt.psf = lambda: btk.survey.get_psf_from_file(
             os.path.join(psf_dir, f), survey
