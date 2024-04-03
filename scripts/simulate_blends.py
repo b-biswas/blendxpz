@@ -72,7 +72,7 @@ for f in filters:
 
 
 # Start simulating galaxies
-for real_gal_num, real_galaxy_num in enumerate(config["NUM_REAL_GAL_TO_USE"]):
+for real_gal_num, real_galaxy_num in enumerate(range(config["NUM_REAL_GAL_TO_USE"])):
 
     gal_file_path = galaxy_image_paths[real_gal_num]
     gal_file_name = gal_file_path.split("/")[-1]
