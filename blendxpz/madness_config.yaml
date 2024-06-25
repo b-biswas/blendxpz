@@ -1,0 +1,50 @@
+# Data paths for training models
+TF_DATASET_PATH:
+  HSC: /sps/lsst/users/bbiswas/simulations/HSC/
+  LSST: /sps/lsst/users/bbiswas/simulations/LSST/
+
+btksims:
+  ORIGINAL_CAT_PATH:
+    HSC: [
+      "/sps/lsst/users/bbiswas/HSC_catalog/real_galaxy_catalog_26_extension_detrefined.fits",
+      "/sps/lsst/users/bbiswas/HSC_catalog/real_galaxy_catalog_26_extension_detrefined_fits.fits",
+    ]
+    LSST: /sps/lsst/users/bbiswas/OneDegSq.fits
+  CAT_PATH:
+    HSC: [
+      "/sps/lsst/users/bbiswas/HSC_catalog/real_galaxy_catalog_26_extension_detrefined.fits",
+      "/sps/lsst/users/bbiswas/HSC_catalog/real_galaxy_catalog_26_extension_detrefined_fits.fits",
+    ]
+    LSST: /sps/lsst/users/bbiswas/OneDegSq_snr_10.fits
+
+  # Training and validation parameters
+  TRAIN_DATA_SAVE_PATH:
+    HSC: /sps/lsst/users/bbiswas/simulations/HSC/
+    LSST: /sps/lsst/users/bbiswas/simulations/LSST/
+  TRAIN_VAL_PARAMS:
+    btk_seed: 993
+    stamp_size: 15
+    maxshift: 2
+    btk_batch_size: 100
+    isolated_params:
+      max_number: 1
+      min_number: 1
+      unique_galaxies: true
+    blended_params:
+      max_number: 3
+      min_number: 1
+      unique_galaxies: false
+    training:
+      LSST:
+        index_range: [0, 150000]
+        num_batches: 1500
+      HSC:
+        index_range: [0, 75000]
+        num_batches: 750
+    validation:
+      LSST:
+        index_range: [150000, 200000]
+        num_batches: 500
+      HSC:
+        index_range: [75000, 100000]
+        num_batches: 250
