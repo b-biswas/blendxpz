@@ -16,7 +16,7 @@ from galcheat.survey import Survey
 from madness_benchmark.btksims.sampling import CustomSampling
 from madness_deblender.extraction import extract_cutouts
 
-from blendxpz.utils import get_data_dir_path, get_blendxpz_config_path
+from blendxpz.utils import get_data_dir_path, get_blendxpz_config_path, get_madness_config_path
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -37,8 +37,11 @@ if blend_type not in ["isolated", "blended"]:
 with open(get_blendxpz_config_path()) as f:
     blendxpz_config = yaml.safe_load(f)
 
+with open(get_madness_config_path()) as f:
+    madness_config = yaml.safe_load(f)
+
 survey_name = blendxpz_config["SURVEY_NAME"]
-btksims_config = blendxpz_config["btksims"]
+btksims_config = madness_config["btksims"]
 print(survey_name)
 if survey_name == "HSC":
     data_path = get_data_dir_path()

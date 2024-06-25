@@ -3,15 +3,19 @@
 import os
 
 import yaml
-from blendxpz.simulations.training.dataset_generator import loadExCOSMOSDataset
+from blendxpz.training.dataset_generator import loadExCOSMOSDataset
 
-from blendxpz.utils import get_blendxpz_config_path
+from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
+
 
 with open(get_blendxpz_config_path()) as f:
     blendxpz_config = yaml.safe_load(f)
 
-btksims_config = blendxpz_config["btksims"]
+with open(get_madness_config_path()) as f:
+    madness_config = yaml.safe_load(f)
+
 survey_name = blendxpz_config["SURVEY_NAME"]
+btksims_config = madness_config["btksims"]
 
 loadExCOSMOSDataset(
     train_data_dir=os.path.join(
