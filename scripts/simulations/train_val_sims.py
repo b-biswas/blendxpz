@@ -2,7 +2,6 @@
 
 import logging
 import os
-import pickle
 import sys
 
 import btk
