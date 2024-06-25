@@ -30,17 +30,17 @@ loadExCOSMOSDataset(
     ),
 )
 
-# loadExCOSMOSDataset(
-#     train_data_dir=os.path.join(
-#         btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name],
-#         "isolated_training",
-#     ),
-#     val_data_dir=os.path.join(
-#         btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name],
-#         "isolated_validation",
-#     ),
-#     output_dir=os.path.join(
-#         blendxpz_config["TF_DATASET_PATH"][survey_name],
-#         "isolated_tfDataset",
-#     ),
-# )
+loadExCOSMOSDataset(
+    train_data_dir=os.path.join(
+        btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name],
+        "isolated_training",
+    ),
+    val_data_dir=os.path.join(
+        btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name],
+        "isolated_validation",
+    ),
+    output_dir=os.path.join(
+        blendxpz_config["TF_DATASET_PATH"][survey_name],
+        "isolated_tfDataset",
+    ),
+)
