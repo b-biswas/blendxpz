@@ -3,10 +3,9 @@
 import os
 
 import yaml
+
 from blendxpz.training.dataset_generator import loadExCOSMOSDataset
-
 from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
-
 
 with open(get_blendxpz_config_path()) as f:
     blendxpz_config = yaml.safe_load(f)

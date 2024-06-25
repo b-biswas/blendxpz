@@ -1,10 +1,10 @@
-import os 
-import numpy as np 
+import os
 
+import galcheat
+import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
-import yaml 
-import galcheat
+import yaml
 
 from blendxpz.utils import get_blendxpz_config_path
 
@@ -151,10 +151,9 @@ class ExCOSMOSDataset(tfds.core.GeneratorBasedBuilder):
             example["blended_gal_stamps"] = current_sample["blended_gal_stamps"][
                 0
             ].astype("float32")
-            example["pz"] = current_sample["pz"][
-                0
-            ].astype("float32")
+            example["pz"] = current_sample["pz"][0].astype("float32")
             yield key, example
+
 
 def loadExCOSMOSDataset(
     train_data_dir,
@@ -191,6 +190,7 @@ def loadExCOSMOSDataset(
     ds = tfds.load("ExCOSMOSDataset", data_dir=output_dir, builder_kwargs=arg_dict)
 
     return ds
+
 
 def batched_ExCOSMOS(
     tf_dataset_dir,
