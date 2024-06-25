@@ -5,18 +5,20 @@ import os
 import pickle
 import sys
 
+import btk
 import numpy as np
 import pandas as pd
-
-import btk
 import yaml
 from astropy.table import Table
 from galcheat.survey import Survey
-
 from madness_benchmark.btksims.sampling import CustomSampling
 from madness_deblender.extraction import extract_cutouts
 
-from blendxpz.utils import get_data_dir_path, get_blendxpz_config_path, get_madness_config_path
+from blendxpz.utils import (
+    get_blendxpz_config_path,
+    get_data_dir_path,
+    get_madness_config_path,
+)
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -45,7 +47,9 @@ btksims_config = madness_config["btksims"]
 print(survey_name)
 if survey_name == "HSC":
     data_path = get_data_dir_path()
-    survey = Survey.from_yaml(os.path.join(data_path, "HSC.yaml")) # TODO: add to config file?
+    survey = Survey.from_yaml(
+        os.path.join(data_path, "HSC.yaml")
+    )  # TODO: add to config file?
 else:
     survey = btk.survey.get_surveys(survey_name)
 
@@ -147,8 +151,10 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
                 postage_stamps["r_band_snr"] = [
                     batch.catalog_list[blended_image_num]["r_band_snr"]
                 ]
-            if survey_name=="HSC":
-                postage_stamps["pz"] = [batch.catalog_list[blended_image_num][galaxy_num]['ZPHOT']]
+            if survey_name == "HSC":
+                postage_stamps["pz"] = [
+                    batch.catalog_list[blended_image_num][galaxy_num]["ZPHOT"]
+                ]
 
             postage_stamps = pd.DataFrame(postage_stamps)
 
@@ -165,4 +171,3 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
             if stamp_counter == total_galaxy_stamps:
                 LOG.info(f"simulated {stamp_counter} stamps")
                 sys.exit()
-
