@@ -44,13 +44,13 @@ def create_vae_pz_model(encoder, decoder, input_shape, latent_dim):
     return Model(inputs=x_input, outputs=(decoder(z), pz_estimator(z))), pz_estimator
 
 
-def create_photometry_pz_model(num_bands):
+# def create_photometry_pz_model(num_bands):
 
-    # Link the models
-    x_input = Input(shape=(num_bands))
-    pz_estimator = create_pz_estimator(latent_dim=5)
+#     # Link the models
+#     x_input = Input(shape=(num_bands))
+#     pz_estimator = create_pz_estimator(latent_dim=5)
 
-    return pz_estimator
+#     return pz_estimator
 
 
 def train_pz(
