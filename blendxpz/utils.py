@@ -26,9 +26,10 @@ def get_blendxpz_config_path():
 
     """
     curdir = os.path.dirname(os.path.abspath(__file__))
-    blendxpz_config_path = os.path.join(curdir, "blendxpz_config.yaml")
+    blendxpz_config_path = os.path.join(curdir, "configs", "blendxpz_config.yaml")
 
     return blendxpz_config_path
+
 
 def get_madness_config_path():
     """Fetch path to madness_deblender config yaml file.
@@ -40,6 +41,6 @@ def get_madness_config_path():
 
     """
     curdir = os.path.dirname(os.path.abspath(__file__))
-    madness_config_path = os.path.join(curdir, "madness_config.yaml")
+    madness_config_path = os.path.join(curdir, "configs", "madness_config.yaml")
 
     return madness_config_path
