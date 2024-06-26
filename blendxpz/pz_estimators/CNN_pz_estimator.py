@@ -3,14 +3,9 @@
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
-from tensorflow.keras.layers import (
-    Conv2D,
-    Dense,
-    Flatten,
-    Input,
-    PReLU,
-)
+from tensorflow.keras.layers import Conv2D, Dense, Flatten, Input, PReLU
 from tensorflow.keras.models import Model
+
 
 def create_model(
     input_shape=[45, 45, 5],
@@ -55,11 +50,11 @@ def create_model(
         h = PReLU()(h)
 
     h = Flatten()(h)
-    h = Dense(dense_layer_units,activation="tanh")(h)
-    #h = PReLU()(h)
-    mu = Dense(1,
+    h = Dense(dense_layer_units, activation="tanh")(h)
+    # h = PReLU()(h)
+    mu = Dense(
+        1,
         activation="relu",
-    )(h) 
-
+    )(h)
 
     return Model(input_layer, mu, name="CNN_pz_estimator")

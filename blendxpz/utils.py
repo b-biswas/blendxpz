@@ -30,6 +30,7 @@ def get_blendxpz_config_path():
 
     return blendxpz_config_path
 
+
 def get_madness_config_path():
     """Fetch path to madness_deblender config yaml file.
 

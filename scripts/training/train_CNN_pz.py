@@ -11,10 +11,9 @@ import tensorflow_probability as tfp
 import yaml
 from madness_deblender.callbacks import define_callbacks
 
-from blendxpz.utils import get_data_dir_path
 from blendxpz.pz_estimators.CNN_pz_estimator import create_model
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_madness_config_path
+from blendxpz.utils import get_data_dir_path, get_madness_config_path
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -29,9 +28,11 @@ lr_scheduler_epochs = 30
 linear_norm_coeff = 1
 patience = 30
 
+
 def pz_loss_function(y, predicted):
-    #return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return (y-predicted)**2
+    # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
+    return (y - predicted) ** 2
+
 
 with open(get_madness_config_path()) as f:
     madness_config = yaml.safe_load(f)
@@ -72,20 +73,20 @@ ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
 )
 
 pz_model.compile(
-            optimizer=tf.keras.optimizers.Adam(1e-8, clipvalue=0.1),
-            loss=pz_loss_function,
-            experimental_run_tf_function=False,
-        )
+    optimizer=tf.keras.optimizers.Adam(1e-8, clipvalue=0.1),
+    loss=pz_loss_function,
+    experimental_run_tf_function=False,
+)
 
 hist = pz_model.fit(
-            x=ds_isolated_train,
-            epochs=epochs,
-            verbose=1,
-            shuffle=True,
-            validation_data=ds_isolated_val,
-            callbacks=callbacks,
-            workers=8,
-            use_multiprocessing=True,
+    x=ds_isolated_train,
+    epochs=epochs,
+    verbose=1,
+    shuffle=True,
+    validation_data=ds_isolated_val,
+    callbacks=callbacks,
+    workers=8,
+    use_multiprocessing=True,
 )
 
 np.save(path_weights + "/train_vae_history.npy", hist.history)

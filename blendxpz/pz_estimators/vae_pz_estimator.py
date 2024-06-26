@@ -2,12 +2,13 @@ import logging
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Model
 
 tfd = tfp.distributions
 
 LOG = logging.getLogger(__name__)
+
 
 def create_pz_estimator(latent_dim):
 
@@ -27,6 +28,7 @@ def create_pz_estimator(latent_dim):
     # sig = Dense(1, activation="relu")(h) + 0.01
     return Model(input_layer, mu, name="pz-estimator")
 
+
 def create_vae_pz_model(encoder, decoder, input_shape, latent_dim):
     encoder.trainable = False
     # Link the models
@@ -40,6 +42,7 @@ def create_vae_pz_model(encoder, decoder, input_shape, latent_dim):
     pz_estimator = create_pz_estimator(latent_dim=latent_dim)
 
     return Model(inputs=x_input, outputs=(decoder(z), pz_estimator(z))), pz_estimator
+
 
 def create_photometry_pz_model(num_bands):
 

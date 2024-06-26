@@ -11,7 +11,6 @@ import tensorflow_probability as tfp
 import yaml
 from galcheat.utilities import mean_sky_level
 from madness_deblender.callbacks import changeAlpha, define_callbacks
-
 from madness_deblender.FlowVAEnet import FlowVAEnet
 from madness_deblender.losses import (
     deblender_encoder_loss_wrapper,
@@ -20,7 +19,7 @@ from madness_deblender.losses import (
 from madness_deblender.utils import get_data_dir_path
 
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_madness_config_path, get_madness_config_path
+from blendxpz.utils import get_madness_config_path
 
 tfd = tfp.distributions
 
@@ -99,7 +98,7 @@ ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
 if train_models.lower() == "all" or "vae" in train_models:
 
     ssim_fraction = 0.0
-    if survey_name=="LSST":
+    if survey_name == "LSST":
         ssim_fraction = 0.25
 
     # Define all used callbacks
