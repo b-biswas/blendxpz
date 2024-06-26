@@ -153,8 +153,9 @@ dmypy.json
 cython_debug/
 
 # others
-executeables/
+executables/
 blendxpz/data/models/
+blendxpz/data/simulated_blends/
 
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
