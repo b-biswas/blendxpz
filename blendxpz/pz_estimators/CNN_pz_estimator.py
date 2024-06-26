@@ -1,8 +1,5 @@
 """Create the model for CNN pz-estimator."""
 
-import numpy as np
-import tensorflow as tf
-import tensorflow_probability as tfp
 from tensorflow.keras.layers import Conv2D, Dense, Flatten, Input, PReLU
 from tensorflow.keras.models import Model
 

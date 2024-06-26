@@ -2,12 +2,10 @@
 
 import logging
 import os
-import sys
 
 import galcheat
 import numpy as np
 import tensorflow as tf
-import tensorflow_probability as tfp
 import yaml
 from madness_deblender.callbacks import define_callbacks
 
