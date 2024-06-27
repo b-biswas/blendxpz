@@ -141,6 +141,7 @@ def check_repeated_pixel(x_peak, y_peak, pixel_scale, maxshift):
         centers[x][y] += 1
     return True if np.sum(centers > 1) != 0 else False
 
+
 class CustomSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
 
