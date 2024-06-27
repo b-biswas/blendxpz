@@ -17,9 +17,12 @@ from madness_deblender.losses import (
     deblender_loss_fn_wrapper,
 )
 
-from blendxpz.utils import get_data_dir_path
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
+from blendxpz.utils import (
+    get_blendxpz_config_path,
+    get_data_dir_path,
+    get_madness_config_path,
+)
 
 tfd = tfp.distributions
 
