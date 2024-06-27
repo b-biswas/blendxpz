@@ -19,7 +19,7 @@ from madness_deblender.losses import (
 from madness_deblender.utils import get_data_dir_path
 
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_madness_config_path
+from blendxpz.utils import get_madness_config_path, get_blendxpz_config_path
 
 tfd = tfp.distributions
 
@@ -38,10 +38,13 @@ latent_dim = 16
 linear_norm_coeff = 10000
 patience = 30
 
+with open(get_blendxpz_config_path()) as f:
+    blendxpz_config = yaml.safe_load(f)
+
 with open(get_madness_config_path()) as f:
     madness_config = yaml.safe_load(f)
 
-survey_name = madness_config["SURVEY_NAME"]
+survey_name = blendxpz_config["SURVEY_NAME"]
 
 if survey_name not in ["LSST", "HSC"]:
     raise ValueError(
@@ -80,7 +83,7 @@ f_net = FlowVAEnet(
 data_path = get_data_dir_path()
 
 # path_weights = os.path.join(data_path, f"catsim_kl{kl_weight_exp}{latent_dim}d")
-path_weights = os.path.join(data_path, survey.name + str(kl_weight))
+path_weights = os.path.join(data_path, "models", survey.name + str(kl_weight))
 
 # Define the generators
 ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
