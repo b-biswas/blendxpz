@@ -11,7 +11,11 @@ from madness_deblender.callbacks import define_callbacks
 
 from blendxpz.pz_estimators.CNN_pz_estimator import create_model
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_data_dir_path, get_madness_config_path
+from blendxpz.utils import (
+    get_blendxpz_config_path,
+    get_data_dir_path,
+    get_madness_config_path,
+)
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -23,7 +27,7 @@ batch_size = 100
 epochs = 200
 lr_scheduler_epochs = 30
 
-linear_norm_coeff = 1
+linear_norm_coeff = 10000
 patience = 30
 
 
@@ -32,16 +36,18 @@ def pz_loss_function(y, predicted):
     return (y - predicted) ** 2
 
 
+with open(get_blendxpz_config_path()) as f:
+    blendxpz_config = yaml.safe_load(f)
+
 with open(get_madness_config_path()) as f:
     madness_config = yaml.safe_load(f)
 
-survey_name = madness_config["SURVEY_NAME"]
+survey_name = blendxpz_config["SURVEY_NAME"]
 
 if survey_name not in ["LSST", "HSC"]:
     raise ValueError(
         "survey should be one of: LSST or HSC"
     )  # other surveys to be added soon!
-
 
 survey = galcheat.get_survey(survey_name)
 
@@ -49,7 +55,7 @@ survey = galcheat.get_survey(survey_name)
 data_path = get_data_dir_path()
 
 # path_weights = os.path.join(data_path, f"catsim_kl{kl_weight_exp}{latent_dim}d")
-path_weights = os.path.join(data_path, survey.name + "_CNN_estimator")
+path_weights = os.path.join(data_path, "models", survey.name + "_CNN_estimator")
 callbacks = define_callbacks(
     os.path.join(path_weights),
     lr_scheduler_epochs=lr_scheduler_epochs,
@@ -64,14 +70,14 @@ ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
     tf_dataset_dir=os.path.join(
         madness_config["TF_DATASET_PATH"][survey_name], "isolated_tfDataset"
     ),
-    linear_norm_coeff=1,
+    linear_norm_coeff=linear_norm_coeff,
     batch_size=batch_size,
     x_col_name="isolated_gal_stamps",
     y_col_name="pz",
 )
 
 pz_model.compile(
-    optimizer=tf.keras.optimizers.Adam(1e-8, clipvalue=0.1),
+    optimizer=tf.keras.optimizers.Adam(1e-4, clipvalue=1),
     loss=pz_loss_function,
     experimental_run_tf_function=False,
 )
