@@ -1,4 +1,5 @@
 """Define custom sampling for BTK"""
+
 import logging
 import warnings
 
@@ -8,6 +9,7 @@ from btk.utils import DEFAULT_SEED
 
 # logging level set to INFO
 LOG = logging.getLogger(__name__)
+
 
 class FixedDistSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
@@ -162,6 +164,7 @@ def check_repeated_pixel(x_peak, y_peak, pixel_scale, maxshift):
         y = int(np.round(y / pixel_scale) + maxshift / pixel_scale)
         centers[x][y] += 1
     return True if np.sum(centers > 1) != 0 else False
+
 
 class CustomSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
