@@ -11,7 +11,11 @@ from madness_deblender.callbacks import define_callbacks
 
 from blendxpz.pz_estimators.CNN_pz_estimator import create_model
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
-from blendxpz.utils import get_data_dir_path, get_madness_config_path, get_blendxpz_config_path
+from blendxpz.utils import (
+    get_blendxpz_config_path,
+    get_data_dir_path,
+    get_madness_config_path,
+)
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -29,7 +33,7 @@ patience = 30
 
 def pz_loss_function(y, predicted):
     # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return (y - predicted)**2
+    return (y - predicted) ** 2
 
 
 with open(get_blendxpz_config_path()) as f:
