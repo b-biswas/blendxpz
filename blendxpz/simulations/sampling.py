@@ -1,4 +1,5 @@
 """Define custom sampling for BTK"""
+
 import logging
 import warnings
 
@@ -8,6 +9,7 @@ from btk.utils import DEFAULT_SEED
 
 # logging level set to INFO
 LOG = logging.getLogger(__name__)
+
 
 class FixedDistSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
