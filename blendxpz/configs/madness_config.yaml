@@ -1,7 +1,7 @@
 # Data paths for training models
 TF_DATASET_PATH:
-  HSC: /sps/lsst/users/bbiswas/simulations/HSC/
-  LSST: /sps/lsst/users/bbiswas/simulations/LSST/
+  HSC: /sps/lsst/users/bbiswas/simulations/HSC/ # TF dataset only
+  LSST: /sps/lsst/users/bbiswas/simulations/LSST/blendxpz/ # TF dataset only
 
 btksims:
   ORIGINAL_CAT_PATH:
@@ -20,7 +20,7 @@ btksims:
   # Training and validation parameters
   TRAIN_DATA_SAVE_PATH:
     HSC: /sps/lsst/users/bbiswas/simulations/HSC/
-    LSST: /sps/lsst/users/bbiswas/simulations/LSST/
+    LSST: /sps/lsst/users/bbiswas/simulations/LSST/blendxpz/
   TRAIN_VAL_PARAMS:
     btk_seed: 993
     stamp_size: 15
