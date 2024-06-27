@@ -139,30 +139,6 @@ def check_repeated_pixel(x_peak, y_peak, pixel_scale, maxshift):
         centers[x][y] += 1
     return True if np.sum(centers > 1) != 0 else False
 
-
-def check_repeated_pixel(x_peak, y_peak, pixel_scale, maxshift):
-    """Check repeated pixel.
-
-    Parameters
-    ----------
-    x_peak : float
-        x_peak in arc seconds
-    y_peak : float
-        y_peak in arc seconds
-    pixel_scale : float/int
-        pixel_scale of the survey
-    maxshift : float
-        maxshift in arc seconds
-
-    """
-    dim = int(2 * maxshift / pixel_scale + 1)
-    centers = np.zeros((dim, dim))
-    for x, y in zip(x_peak, y_peak):
-        x = int(np.round(x / pixel_scale) + maxshift / pixel_scale)
-        y = int(np.round(y / pixel_scale) + maxshift / pixel_scale)
-        centers[x][y] += 1
-    return True if np.sum(centers > 1) != 0 else False
-
 class CustomSampling(SamplingFunction):
     """Default sampling function used for producing blend tables."""
 
