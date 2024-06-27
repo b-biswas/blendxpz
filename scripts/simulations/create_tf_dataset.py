@@ -26,7 +26,7 @@ loadExCOSMOSDataset(
         "blended_validation",
     ),
     output_dir=os.path.join(
-        blendxpz_config["TF_DATASET_PATH"][survey_name], "blended_tfDataset"
+        madness_config["TF_DATASET_PATH"][survey_name], "blended_tfDataset"
     ),
 )
 
@@ -40,7 +40,7 @@ loadExCOSMOSDataset(
         "isolated_validation",
     ),
     output_dir=os.path.join(
-        blendxpz_config["TF_DATASET_PATH"][survey_name],
+        madness_config["TF_DATASET_PATH"][survey_name],
         "isolated_tfDataset",
     ),
 )
