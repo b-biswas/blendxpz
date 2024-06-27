@@ -10,7 +10,7 @@ import pandas as pd
 import yaml
 from astropy.table import Table
 from galcheat.survey import Survey
-from madness_benchmark.btksims.sampling import CustomSampling
+from blendxpz.simulations.sampling import CustomSampling
 from madness_deblender.extraction import extract_cutouts
 
 from blendxpz.utils import (
@@ -154,6 +154,11 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
                 postage_stamps["pz"] = [
                     batch.catalog_list[blended_image_num][galaxy_num]["ZPHOT"]
                 ]
+            else:
+                postage_stamps["pz"] = [
+                    batch.catalog_list[blended_image_num][galaxy_num]["redshift"]
+                ]
+
 
             postage_stamps = pd.DataFrame(postage_stamps)
 
