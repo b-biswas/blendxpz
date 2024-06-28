@@ -157,10 +157,12 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
 
             postage_stamps = pd.concat(
                 (
-                    postage_stamps, 
-                    Table(batch.catalog_list[blended_image_num][galaxy_num]).to_pandas(),
-                ), 
-                axis=1
+                    postage_stamps,
+                    Table(
+                        batch.catalog_list[blended_image_num][galaxy_num]
+                    ).to_pandas(),
+                ),
+                axis=1,
             )
 
             np.save(
