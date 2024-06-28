@@ -10,10 +10,7 @@ import yaml
 from astropy.table import Table
 
 from blendxpz.simulations.sampling import CustomSampling
-from blendxpz.utils import (
-    get_blendxpz_config_path,
-    get_madness_config_path,
-)
+from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
