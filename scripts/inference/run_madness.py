@@ -143,6 +143,7 @@ for file_num in range(num_repetations):
         map_solution=map_solution,
     )
     padding_infos_all_fields = deb.get_padding_infos()
+    latent_reps = deb.z
 
     for field_num in range(len(blend.catalog_list)):
         # LOG.info(field_num)
@@ -186,6 +187,7 @@ for file_num in range(num_repetations):
         # madness_current_res["images"] = current_field_predictions
         madness_current_res["field_num"] = [field_num] * num_galaxies
         madness_current_res["file_num"] = [file_num] * num_galaxies
+        madness_current_res["latent_rep"] = latent_reps[file_num][num_galaxies]
 
         if survey_name == "LSST":
             madness_current_res["r_band_snr"] = blend.catalog_list[field_num][
