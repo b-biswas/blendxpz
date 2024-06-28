@@ -20,8 +20,6 @@ from blendxpz.metrics import (
     compute_pixel_cosdist,
     compute_shapes,
 )
-from madness_deblender.deblender import Deblender
-
 from blendxpz.utils import (
     get_blendxpz_config_path,
     get_data_dir_path,
