@@ -12,7 +12,6 @@ from astropy.table import Table
 from blendxpz.simulations.sampling import CustomSampling
 from blendxpz.utils import (
     get_blendxpz_config_path,
-    get_data_dir_path,
     get_madness_config_path,
 )
 
