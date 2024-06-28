@@ -20,6 +20,7 @@ from blendxpz.metrics import (
     compute_pixel_cosdist,
     compute_shapes,
 )
+from madness_deblender.deblender import Deblender
 
 from blendxpz.utils import (
     get_blendxpz_config_path,
@@ -56,7 +57,7 @@ if density not in ["high", "low"]:
     raise ValueError("The second argument should be either isolated or blended")
 
 num_repetations = 300
-max_number = 20 # Change this to the maximum number of galaxies in each field
+max_number = 20  # Change this to the maximum number of galaxies in each field
 
 kl_weight = 10**-kl_weight_exp
 # weights_path = os.path.join(get_data_dir_path(), survey_name + str(kl_weight))
