@@ -144,12 +144,6 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
             postage_stamps["gal_locations_x_peak"] = [
                 batch.catalog_list[blended_image_num]["x_peak"] - pos[1]
             ]
-            if "r_band_snr" not in batch.catalog_list[blended_image_num].columns:
-                postage_stamps["r_band_snr"] = 0
-            else:
-                postage_stamps["r_band_snr"] = [
-                    batch.catalog_list[blended_image_num]["r_band_snr"]
-                ]
             if survey_name == "HSC":
                 postage_stamps["pz"] = [
                     batch.catalog_list[blended_image_num][galaxy_num]["ZPHOT"]
@@ -160,6 +154,14 @@ for batch_num in range(sim_config[dataset][survey_name]["num_batches"]):
                 ]
 
             postage_stamps = pd.DataFrame(postage_stamps)
+
+            postage_stamps = pd.concat(
+                (
+                    postage_stamps, 
+                    Table(batch.catalog_list[blended_image_num][galaxy_num]).to_pandas(),
+                ), 
+                axis=1
+            )
 
             np.save(
                 os.path.join(
