@@ -48,3 +48,27 @@ btksims:
       HSC:
         index_range: [75000, 100000]
         num_batches: 250
+
+
+# Test parameters
+  TEST_DATA_SAVE_PATH:
+    HSC: /sps/lsst/users/bbiswas/simulations/HSC/test_data/
+    LSST: /sps/lsst/users/bbiswas/simulations/LSST/test_data/blendxpz
+  TEST_PARAMS:
+    btk_seed: 13
+    stamp_size: 41
+    maxshift: 15
+    btk_batch_size: 20
+    high_density:
+      min_number: 12
+      max_number: 20
+    low_density:
+      min_number: 8
+      max_number: 15
+    unique_galaxies: True
+    LSST:
+      index_start: 200000
+      num_files: 300
+    HSC:
+      index_start: 150000
+      num_files: 200
