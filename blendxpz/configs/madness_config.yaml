@@ -3,6 +3,14 @@ TF_DATASET_PATH:
   HSC: /sps/lsst/users/bbiswas/simulations/HSC/ # TF dataset only
   LSST: /sps/lsst/users/bbiswas/simulations/LSST/blendxpz/ # TF dataset only
 
+# Paths for comparing deblenders (used for testing purposes)
+TEST_DATA_PATH:
+  HSC: /sps/lsst/users/bbiswas/simulations/HSC/test_data/
+  LSST: /sps/lsst/users/bbiswas/simulations/LSST/test_data/blendxpz
+RESULTS_PATH:
+  HSC: /sps/lsst/users/bbiswas/MADNESS_results/HSC/
+  LSST: /sps/lsst/users/bbiswas/MADNESS_results/LSST/blendxpz
+
 btksims:
   ORIGINAL_CAT_PATH:
     HSC: [
@@ -49,8 +57,7 @@ btksims:
         index_range: [75000, 100000]
         num_batches: 250
 
-
-# Test parameters
+  # Test parameters
   TEST_DATA_SAVE_PATH:
     HSC: /sps/lsst/users/bbiswas/simulations/HSC/test_data/
     LSST: /sps/lsst/users/bbiswas/simulations/LSST/test_data/blendxpz
