@@ -15,7 +15,7 @@ import tensorflow_probability as tfp
 import yaml
 from madness_deblender.deblender import Deblender
 
-from madness_benchmark.metrics import (
+from blendxpz.metrics import (
     compute_aperture_photometry,
     compute_pixel_cosdist,
     compute_shapes,
