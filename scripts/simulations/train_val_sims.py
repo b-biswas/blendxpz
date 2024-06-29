@@ -10,7 +10,7 @@ import yaml
 from astropy.table import Table
 from madness_deblender.extraction import extract_cutouts
 
-from blendxpz.simulations import btk_setup
+from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.simulations.sampling import CustomSampling
 from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
@@ -40,7 +40,7 @@ survey_name = blendxpz_config["SURVEY_NAME"]
 btksims_config = madness_config["btksims"]
 print(survey_name)
 
-catalog, generator, survey = btk_setup(
+catalog, generator, survey = btk_setup_helper(
     survey_name=survey_name,
     btksims_config=btksims_config,
 )

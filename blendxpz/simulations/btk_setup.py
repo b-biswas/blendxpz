@@ -14,7 +14,7 @@ def HSC_filter_snr_adjust(survey):
     return survey
 
 
-def btk_setup(survey_name, btksims_config):
+def btk_setup_helper(survey_name, btksims_config):
     survey = btk.survey.get_surveys(survey_name)
     if survey_name == "HSC":
         survey = HSC_filter_snr_adjust(survey)

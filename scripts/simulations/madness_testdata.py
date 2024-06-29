@@ -7,7 +7,7 @@ import sys
 
 import yaml
 
-from blendxpz.simulations import btk_setup
+from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.simulations.sampling import CustomSampling
 from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
@@ -32,7 +32,7 @@ LOG.info(f"survey: {survey_name}")
 btksims_config = madness_config["btksims"]
 simulation_path = btksims_config["TEST_DATA_SAVE_PATH"][survey_name]
 
-catalog, generator, survey = btk_setup(
+catalog, generator, survey = btk_setup_helper(
     survey_name=survey_name,
     btksims_config=btksims_config,
 )
