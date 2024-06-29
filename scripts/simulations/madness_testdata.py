@@ -5,10 +5,9 @@ import os
 import pickle
 import sys
 
-import btk
 import yaml
-from astropy.table import Table
 
+from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.simulations.sampling import CustomSampling
 from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
@@ -29,29 +28,18 @@ with open(get_madness_config_path()) as f:
     madness_config = yaml.safe_load(f)
 
 survey_name = blendxpz_config["SURVEY_NAME"]
+LOG.info(f"survey: {survey_name}")
 btksims_config = madness_config["btksims"]
-
-survey = btk.survey.get_surveys(survey_name)
 simulation_path = btksims_config["TEST_DATA_SAVE_PATH"][survey_name]
-CATALOG_PATH = btksims_config["CAT_PATH"][survey_name]
 
-print(CATALOG_PATH)
+catalog, generator, survey = btk_setup_helper(
+    survey_name=survey_name,
+    btksims_config=btksims_config,
+)
 
 sim_config = btksims_config["TEST_PARAMS"]
+LOG.info(f"Simulation config: {sim_config}")
 
-if type(CATALOG_PATH) == list:
-    catalog = btk.catalog.CosmosCatalog.from_file(CATALOG_PATH, exclusion_level="none")
-    generator = btk.draw_blends.CosmosGenerator
-else:
-    catalog = btk.catalog.CatsimCatalog.from_file(CATALOG_PATH)
-    generator = btk.draw_blends.CatsimGenerator
-
-# Shuffle to make sure distributions are consistent across train, test, and validation sets.
-# Be careful with the random state, it should be the same in the validation set.
-catalog.table = Table.from_pandas(
-    catalog.table.to_pandas().sample(frac=1, random_state=0).reset_index(drop=True)
-)
-print(sim_config)
 index_range = [sim_config[survey_name]["index_start"], len(catalog.table)]
 sampling_function = CustomSampling(
     index_range=index_range,
@@ -62,7 +50,7 @@ sampling_function = CustomSampling(
     seed=sim_config["btk_seed"],
     unique=sim_config["unique_galaxies"],
     dataset="test",
-    pixel_scale=0.2,
+    pixel_scale=survey.pixel_scale.value,
 )
 
 draw_generator = generator(
