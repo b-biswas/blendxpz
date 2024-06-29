@@ -9,15 +9,12 @@ import numpy as np
 import pandas as pd
 import yaml
 from astropy.table import Table
-from galcheat.survey import Survey
+from btk.survey import Survey
 from madness_deblender.extraction import extract_cutouts
 
+from blendxpz.simulations import btk_setup
 from blendxpz.simulations.sampling import CustomSampling
-from blendxpz.utils import (
-    get_blendxpz_config_path,
-    get_data_dir_path,
-    get_madness_config_path,
-)
+from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -44,31 +41,16 @@ with open(get_madness_config_path()) as f:
 survey_name = blendxpz_config["SURVEY_NAME"]
 btksims_config = madness_config["btksims"]
 print(survey_name)
-if survey_name == "HSC":
-    data_path = get_data_dir_path()
-    survey = Survey.from_yaml(
-        os.path.join(data_path, "HSC.yaml")
-    )  # TODO: add to config file?
-else:
-    survey = btk.survey.get_surveys(survey_name)
+
+catalog, generator, survey = btk_setup(
+    survey_name=survey_name,
+    btksims_config=btksims_config,
+)
 
 sim_config = btksims_config["TRAIN_VAL_PARAMS"]
 
 SAVE_PATH = btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name]
-CATALOG_PATH = btksims_config["CAT_PATH"][survey_name]
 print("saving data at " + SAVE_PATH)
-
-if type(CATALOG_PATH) == list:
-    catalog = btk.catalog.CosmosCatalog.from_file(CATALOG_PATH, exclusion_level="none")
-    generator = btk.draw_blends.CosmosGenerator
-else:
-    catalog = btk.catalog.CatsimCatalog.from_file(CATALOG_PATH)
-    generator = btk.draw_blends.CatsimGenerator
-
-catalog.table = Table.from_pandas(
-    catalog.table.to_pandas().sample(frac=1, random_state=0).reset_index(drop=True)
-)
-survey = btk.survey.get_surveys(survey_name)
 
 sampling_function = CustomSampling(
     index_range=sim_config[dataset][survey_name]["index_range"],
