@@ -9,8 +9,9 @@ def HSC_filter_snr_adjust(survey):
     for i, f in enumerate(filters):
         filt = survey.get_filter(f)
         filt.sky_brightness = (
-            filt.sky_brightness.value + offsets[i] * u.mag / (u.arcsec) ** 2
+            (filt.sky_brightness.value + offsets[i]) * u.mag / (u.arcsec) ** 2
         )
+
     return survey
 
 
