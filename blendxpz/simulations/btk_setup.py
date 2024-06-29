@@ -1,5 +1,3 @@
-import os
-
 import astropy.units as u
 import btk
 from astropy.table import Table

@@ -4,12 +4,10 @@ import logging
 import os
 import sys
 
-import btk
 import numpy as np
 import pandas as pd
 import yaml
 from astropy.table import Table
-from btk.survey import Survey
 from madness_deblender.extraction import extract_cutouts
 
 from blendxpz.simulations import btk_setup
