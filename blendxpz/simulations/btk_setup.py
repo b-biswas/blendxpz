@@ -57,7 +57,9 @@ def btk_setup_helper(survey_name, btksims_config=None):
             generator = btk.draw_blends.CatsimGenerator
 
         catalog.table = Table.from_pandas(
-            catalog.table.to_pandas().sample(frac=1, random_state=0).reset_index(drop=True)
+            catalog.table.to_pandas()
+            .sample(frac=1, random_state=0)
+            .reset_index(drop=True)
         )
 
     return catalog, generator, survey
