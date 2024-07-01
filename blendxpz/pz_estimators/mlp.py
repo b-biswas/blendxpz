@@ -2,8 +2,8 @@ import logging
 
 import tensorflow as tf
 import tensorflow_probability as tfp
-from tensorflow.keras.layers import Dense, Input, PReLU
-from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input, PReLU # type: ignore
+from tensorflow.keras.models import Model # type: ignore
 
 tfd = tfp.distributions
 
