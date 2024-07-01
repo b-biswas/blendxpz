@@ -272,7 +272,7 @@ def compute_aperture_photometry(
 
         results["galaxy_num"].append(galaxy_num)
 
-    return results, galaxy
+    return results
 
 
 def compute_shapes(
