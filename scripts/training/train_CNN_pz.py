@@ -56,7 +56,7 @@ _, _, survey = btk_setup_helper(
 data_path = get_data_dir_path()
 
 # path_weights = os.path.join(data_path, f"catsim_kl{kl_weight_exp}{latent_dim}d")
-path_weights = os.path.join(data_path, "models", survey.name + "_CNN_estimator")
+path_weights = os.path.join(data_path, "models", survey_name + "_CNN_estimator")
 callbacks = define_callbacks(
     os.path.join(path_weights),
     lr_scheduler_epochs=lr_scheduler_epochs,

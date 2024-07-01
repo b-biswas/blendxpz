@@ -4,7 +4,6 @@ import logging
 import os
 import sys
 
-import galcheat
 import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
@@ -17,6 +16,7 @@ from madness_deblender.losses import (
     deblender_loss_fn_wrapper,
 )
 
+from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
 from blendxpz.utils import (
     get_blendxpz_config_path,
@@ -35,11 +35,11 @@ LOG = logging.getLogger(__name__)
 batch_size = 100
 vae_epochs = 200
 flow_epochs = 200
-deblender_epochs = 150
-lr_scheduler_epochs = 30
+deblender_epochs = 200
+lr_scheduler_epochs = 40
 latent_dim = 16
 linear_norm_coeff = 10000
-patience = 30
+patience = 20
 
 with open(get_blendxpz_config_path()) as f:
     blendxpz_config = yaml.safe_load(f)
@@ -62,7 +62,9 @@ kl_weight_exp = int(sys.argv[2])
 kl_weight = 10**-kl_weight_exp
 LOG.info(f"KL weight{kl_weight}")
 
-survey = galcheat.get_survey(survey_name)
+_, _, survey = btk_setup_helper(
+    survey_name=survey_name,
+)
 
 noise_sigma = []
 for b, name in enumerate(survey.available_filters):
