@@ -3,13 +3,13 @@
 import logging
 import os
 
-import galcheat
 import numpy as np
 import tensorflow as tf
 import yaml
 from madness_deblender.callbacks import define_callbacks
 
-from blendxpz.pz_estimators.CNN_pz_estimator import create_model
+from blendxpz.pz_estimators.cnn import create_cnn_estimator
+from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.training.dataset_generator import batched_ExCOSMOS
 from blendxpz.utils import (
     get_blendxpz_config_path,
@@ -45,11 +45,12 @@ with open(get_madness_config_path()) as f:
 survey_name = blendxpz_config["SURVEY_NAME"]
 
 if survey_name not in ["LSST", "HSC"]:
-    raise ValueError(
-        "survey should be one of: LSST or HSC"
-    )  # other surveys to be added soon!
+    raise ValueError("survey should be one of: LSST or HSC")
 
-survey = galcheat.get_survey(survey_name)
+_, _, survey = btk_setup_helper(
+    survey_name=survey_name,
+)
+
 
 # Keras Callbacks
 data_path = get_data_dir_path()
@@ -62,7 +63,7 @@ callbacks = define_callbacks(
     patience=patience,
 )
 
-pz_model = create_model()
+pz_model = create_cnn_estimator()
 # Define the generators
 ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
     train_data_dir=None,

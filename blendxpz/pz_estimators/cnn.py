@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Conv2D, Dense, Flatten, Input, PReLU
 from tensorflow.keras.models import Model
 
 
-def create_model(
+def create_cnn_estimator(
     input_shape=[45, 45, 5],
     filters=[32, 128, 256, 512],
     kernels=[5, 5, 5, 5],
