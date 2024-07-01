@@ -79,7 +79,7 @@ ds_isolated_train, ds_isolated_val = batched_ExCOSMOS(
 
 pz_model.compile(
     optimizer=tf.keras.optimizers.Adam(1e-4, clipvalue=1),
-    loss=pz_loss_function,
+    loss=tf.keras.losses.MSE,
     experimental_run_tf_function=False,
 )
 
