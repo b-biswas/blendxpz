@@ -248,6 +248,9 @@ def compute_aperture_photometry(
         else:
             galaxy = residual_field + predictions[galaxy_num]
 
+        if galaxy.shape[-1] == len(survey.available_filters):
+            galaxy = np.transpose(galaxy, axes=(2, 0, 1))
+
         galaxy = galaxy.copy(order="C")
 
         for band_num, band in enumerate(survey.available_filters):
@@ -269,7 +272,7 @@ def compute_aperture_photometry(
 
         results["galaxy_num"].append(galaxy_num)
 
-    return results
+    return results, galaxy
 
 
 def compute_shapes(
