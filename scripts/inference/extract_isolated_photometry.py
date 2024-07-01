@@ -1,19 +1,15 @@
+import logging
 import os
 import sys
-import yaml
-import logging
+
 import numpy as np
-
 import pandas as pd
-
 import sep
+import yaml
 
-from blendxpz.simulations.btk_setup import btk_setup_helper
-from blendxpz.utils import (
-    get_blendxpz_config_path,
-    get_madness_config_path,
-)
 from blendxpz.metrics import compute_aperture_photometry
+from blendxpz.simulations.btk_setup import btk_setup_helper
+from blendxpz.utils import get_blendxpz_config_path, get_madness_config_path
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -43,7 +39,9 @@ survey_name = blendxpz_config["SURVEY_NAME"]
 btksims_config = madness_config["btksims"]
 
 # set the save path
-SAVE_PATH = os.path.join(btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name], blend_type + "_" + dataset)
+SAVE_PATH = os.path.join(
+    btksims_config["TRAIN_DATA_SAVE_PATH"][survey_name], blend_type + "_" + dataset
+)
 
 # definte the survey
 _, _, survey = btk_setup_helper(
@@ -80,6 +78,7 @@ def PopulateFileList(data_folder):
 
     return list_of_images
 
+
 def compute_photometry_data(data_folder):
     """Yield examples.
 
@@ -99,14 +98,14 @@ def compute_photometry_data(data_folder):
         key = os.path.splitext(gal_file)[0]
 
         bkg_rms = {}
-        for band in range(len(survey.available_filters)): # type: ignore
+        for band in range(len(survey.available_filters)):  # type: ignore
             bkg_rms[band] = sep.Background(
                 current_sample["blended_gal_stamps"][0][band]
             ).globalrms
 
         galaxy_info = compute_aperture_photometry(
-            field_image= current_sample["blended_gal_stamps"][0].astype("float32"),
-            predictions= None,
+            field_image=current_sample["blended_gal_stamps"][0].astype("float32"),
+            predictions=None,
             xpos=[22],
             ypos=[22],
             a=[current_sample["flux_radius"][0]],
@@ -116,7 +115,6 @@ def compute_photometry_data(data_folder):
             survey=survey,
         )
 
-
         galaxy_info["pz"] = current_sample["pz"][0].astype("float32")
         galaxy_info["key"] = key
         galaxy_info = pd.DataFrame(galaxy_info)
@@ -124,8 +122,9 @@ def compute_photometry_data(data_folder):
         galaxies.append(galaxy_info)
 
     galaxies = pd.concat(galaxies)
-    
+
     return galaxies
+
 
 galaxies = compute_photometry_data(SAVE_PATH)
 galaxies.to_pickle(os.path.join(SAVE_PATH, "photometry_data.pkl"))
