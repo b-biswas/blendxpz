@@ -115,6 +115,7 @@ def compute_photometry_data(data_folder):
             survey=survey,
         )
 
+        galaxy_info["flux_radius"] = current_sample["flux_radius"][0]
         galaxy_info["pz"] = current_sample["pz"][0].astype("float32")
         galaxy_info["key"] = key
         galaxy_info = pd.DataFrame(galaxy_info)
