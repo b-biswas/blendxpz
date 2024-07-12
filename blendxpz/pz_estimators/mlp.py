@@ -1,7 +1,6 @@
 import logging
 
 import tensorflow_probability as tfp
-
 from tensorflow.keras.layers import Dense, Input  # type: ignore
 from tensorflow.keras.models import Model  # type: ignore
 
