@@ -12,6 +12,7 @@ from madness_deblender.callbacks import define_callbacks
 from blendxpz.pz_estimators.mlp import create_mpl_estimator
 from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.utils import (
+    column_order,
     get_blendxpz_config_path,
     get_data_dir_path,
     get_madness_config_path,
@@ -21,6 +22,13 @@ from blendxpz.utils import (
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 LOG = logging.getLogger(__name__)
+
+
+# loss func
+def pz_loss_function(y, predicted):
+    # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
+    return tf.math.abs(y - 5 * predicted) / (1 + y)
+
 
 # Take inputs
 blend_type = sys.argv[1]  # should be either training or validation
@@ -41,9 +49,8 @@ if survey_name not in ["LSST", "HSC"]:
 batch_size = 100
 epochs = 200
 lr_scheduler_epochs = 30
-
 linear_norm_coeff = 10000
-patience = 30
+patience = 25
 
 # load survey
 _, _, survey = btk_setup_helper(
@@ -62,6 +69,8 @@ data_path = data_path = os.path.join(
 with open(data_path, "rb") as pickle_file:
     file_data = pickle.load(pickle_file)
 
+# First compute the mean and std of training set for normalization.
+
 norms = {}
 norms["mu"] = {}
 norms["sigma"] = {}
@@ -70,8 +79,16 @@ for filter in survey.available_filters:
     z_point = survey.get_filter(filter).zeropoint
     exp_time = survey.get_filter(filter).full_exposure_time
 
-    norms["mu"][f"{filter}"] = np.mean(file_data[f"{filter}_phot_flux"].values)
-    norms["sigma"][f"{filter}"] = np.std(file_data[f"{filter}_phot_flux"].values)
+    mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
+    norms["mu"][f"{filter}"] = np.mean(file_data[f"{filter}_phot_flux"][mask].values)
+    norms["sigma"][f"{filter}"] = np.std(file_data[f"{filter}_phot_flux"][mask].values)
+
+
+norms_path = os.path.join(BASE_DATA_PATH, blend_type + "_" + dataset, "norms.pkl")
+with open(norms_path, "wb") as f:
+    pickle.dump(norms, f)
+
+# create and normalize the training and validation data
 
 for dataset in ["training", "validation"]:
     data_path = os.path.join(
@@ -82,6 +99,7 @@ for dataset in ["training", "validation"]:
 
     data = {}
     data["x"] = {}
+    mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
     for filter in survey.available_filters:
 
         z_point = survey.get_filter(filter).zeropoint
@@ -92,6 +110,7 @@ for dataset in ["training", "validation"]:
             file_data[f"{filter}_phot_flux"].values - norms["mu"][f"{filter}"]
         ) / norms["sigma"][f"{filter}"]
 
+    data["x"]["flux_radius"] = file_data[f"flux_radius"].values / 10
     data["x"] = pd.DataFrame(data["x"])
 
     data["y"] = file_data["pz"]
@@ -103,7 +122,7 @@ for dataset in ["training", "validation"]:
 
 
 # create model
-mlp_estimator = create_mpl_estimator(num_filters=len(survey.available_filters))
+mlp_estimator = create_mpl_estimator(num_filters=len(survey.available_filters) + 1)
 
 # Keras Callbacks
 data_path = get_data_dir_path()
@@ -117,15 +136,16 @@ callbacks = define_callbacks(
 )
 
 mlp_estimator.compile(
-    optimizer=tf.keras.optimizers.Adam(1e-4, clipvalue=1),
-    loss=tf.keras.losses.MSE,
+    optimizer=tf.keras.optimizers.Adam(1e-3, clipvalue=1),
+    loss=pz_loss_function,
     experimental_run_tf_function=False,
 )
 
 hist = mlp_estimator.fit(
-    x=train_data["x"].to_numpy(),
+    x=train_data["x"][column_order(survey)].to_numpy(),
     y=train_data["y"].to_numpy(),
     epochs=epochs,
+    batch_size=batch_size,
     verbose=1,
     shuffle=True,
     validation_data=(val_data["x"].to_numpy(), val_data["y"].to_numpy()),
