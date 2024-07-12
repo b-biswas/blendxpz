@@ -26,7 +26,7 @@ LOG = logging.getLogger(__name__)
 # loss func
 def pz_loss_function(y, predicted):
     # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return tf.math.abs(y - predicted)/y
+    return tf.math.abs(y - 5*predicted)/(1+y)
 
 
 # Take inputs
@@ -47,10 +47,9 @@ if survey_name not in ["LSST", "HSC"]:
 # define the parameters
 batch_size = 100
 epochs = 200
-lr_scheduler_epochs = 20
-
+lr_scheduler_epochs = 30
 linear_norm_coeff = 10000
-patience = 20
+patience = 25
 
 # load survey
 _, _, survey = btk_setup_helper(
@@ -148,6 +147,7 @@ hist = mlp_estimator.fit(
     x=train_data["x"][column_order(survey)].to_numpy(),
     y=train_data["y"].to_numpy(),
     epochs=epochs,
+    batch_size=batch_size,
     verbose=1,
     shuffle=True,
     validation_data=(val_data["x"].to_numpy(), val_data["y"].to_numpy()),

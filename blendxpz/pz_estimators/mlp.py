@@ -13,25 +13,20 @@ def create_mpl_estimator(num_filters=5):
 
     input_layer = Input(shape=(num_filters))
 
-    h = tf.keras.layers.BatchNormalization()(input_layer)
+    h = Dense(128,  activation="tanh")(input_layer)
+    #h = Dropout(.2)(h)
 
-    h = Dense(64)(h)
-    h = PReLU()(h)
-    h = Dropout(.05)(h)
+    h = Dense(256,  activation="tanh")(h)
+    #h = Dropout(.2)(h)
 
-    h = Dense(128)(h)
-    h = Dropout(.05)(h)
-    h = PReLU()(h)
+    h = Dense(512, activation="tanh")(h)
+    #h = Dropout(.2)(h)
 
-    h = tf.keras.layers.BatchNormalization()(h)
+    h = Dense(256, activation="tanh")(h)
+    #h = Dropout(.05)(h)
 
-    h = Dense(128)(h)
-    h = PReLU()(h)
-    h = Dropout(.05)(h)
-
-    h = Dense(64)(h)
-    h = PReLU()(h)
-    h = Dropout(.05)(h)
+    h = Dense(128, activation="tanh")(h)
+    #h = Dropout(.05)(h)
 
     mu = Dense(1, activation="relu")(h)
     # sig = Dense(1, activation="relu")(h) + 0.01
