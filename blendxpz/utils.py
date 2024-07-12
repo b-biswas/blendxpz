@@ -47,7 +47,7 @@ def get_madness_config_path():
 
 
 def column_order(survey):
-    col_names=[]
+    col_names = []
     for filter in survey.available_filters:
         col_names.append(f"{filter}_phot_flux")
     col_names.append("flux_radius")
