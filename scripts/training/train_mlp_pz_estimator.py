@@ -12,21 +12,22 @@ from madness_deblender.callbacks import define_callbacks
 from blendxpz.pz_estimators.mlp import create_mpl_estimator
 from blendxpz.simulations.btk_setup import btk_setup_helper
 from blendxpz.utils import (
+    column_order,
     get_blendxpz_config_path,
     get_data_dir_path,
     get_madness_config_path,
 )
-from blendxpz.utils import column_order
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 LOG = logging.getLogger(__name__)
 
+
 # loss func
 def pz_loss_function(y, predicted):
     # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return tf.math.abs(y - 5*predicted)/(1+y)
+    return tf.math.abs(y - 5 * predicted) / (1 + y)
 
 
 # Take inputs
@@ -78,15 +79,13 @@ for filter in survey.available_filters:
     z_point = survey.get_filter(filter).zeropoint
     exp_time = survey.get_filter(filter).full_exposure_time
 
-    mask = file_data[f"{filter}_phot_flux"]/file_data[f"{filter}_phot_fluxerrs"]>10
+    mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
     norms["mu"][f"{filter}"] = np.mean(file_data[f"{filter}_phot_flux"][mask].values)
     norms["sigma"][f"{filter}"] = np.std(file_data[f"{filter}_phot_flux"][mask].values)
 
 
-norms_path = os.path.join(
-    BASE_DATA_PATH, blend_type + "_" + dataset, "norms.pkl"
-)
-with open(norms_path, 'wb') as f:
+norms_path = os.path.join(BASE_DATA_PATH, blend_type + "_" + dataset, "norms.pkl")
+with open(norms_path, "wb") as f:
     pickle.dump(norms, f)
 
 # create and normalize the training and validation data
@@ -100,7 +99,7 @@ for dataset in ["training", "validation"]:
 
     data = {}
     data["x"] = {}
-    mask = file_data[f"{filter}_phot_flux"]/file_data[f"{filter}_phot_fluxerrs"]>10
+    mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
     for filter in survey.available_filters:
 
         z_point = survey.get_filter(filter).zeropoint
@@ -111,8 +110,7 @@ for dataset in ["training", "validation"]:
             file_data[f"{filter}_phot_flux"].values - norms["mu"][f"{filter}"]
         ) / norms["sigma"][f"{filter}"]
 
-
-    data["x"]["flux_radius"] = file_data[f"flux_radius"].values/10
+    data["x"]["flux_radius"] = file_data[f"flux_radius"].values / 10
     data["x"] = pd.DataFrame(data["x"])
 
     data["y"] = file_data["pz"]
@@ -124,7 +122,7 @@ for dataset in ["training", "validation"]:
 
 
 # create model
-mlp_estimator = create_mpl_estimator(num_filters=len(survey.available_filters)+1)
+mlp_estimator = create_mpl_estimator(num_filters=len(survey.available_filters) + 1)
 
 # Keras Callbacks
 data_path = get_data_dir_path()
