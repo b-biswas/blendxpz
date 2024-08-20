@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import yaml
+import astropy.units as u
 from madness_deblender.callbacks import define_callbacks
 
 from blendxpz.pz_estimators.mlp import create_mpl_estimator
@@ -17,6 +18,9 @@ from blendxpz.utils import (
     get_data_dir_path,
     get_madness_config_path,
 )
+import tensorflow_probability as tfp
+tfd = tfp.distributions
+
 
 # logging level set to INFO
 logging.basicConfig(format="%(message)s", level=logging.INFO)
@@ -27,11 +31,11 @@ LOG = logging.getLogger(__name__)
 # loss func
 def pz_loss_function(y, predicted):
     # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return tf.math.abs(y - 5 * predicted) / (1 + y)
+    return tf.math.abs(y - predicted)/(y+1)
 
 
 # Take inputs
-blend_type = sys.argv[1]  # should be either training or validation
+blend_type = sys.argv[1]  # should be either isolated or blended
 if blend_type not in ["isolated", "blended"]:
     raise ValueError("The second argument should be either isolated or blended")
 
@@ -48,7 +52,7 @@ if survey_name not in ["LSST", "HSC"]:
 # define the parameters
 batch_size = 100
 epochs = 200
-lr_scheduler_epochs = 30
+lr_scheduler_epochs = 50
 linear_norm_coeff = 10000
 patience = 25
 
@@ -69,6 +73,18 @@ data_path = data_path = os.path.join(
 with open(data_path, "rb") as pickle_file:
     file_data = pickle.load(pickle_file)
 
+for band in survey.available_filters:
+
+    z_point = survey.get_filter(band).zeropoint
+    exp_time = survey.get_filter(band).full_exposure_time
+
+    actual_phot_flux = file_data[f"{band}_phot_flux"].values
+    file_data[f"{band}_phot_mag"] = (
+        (actual_phot_flux * u.electron / exp_time).to(u.mag(u.electron / u.s)) + z_point
+    ).value
+
+file_data=file_data.dropna()
+
 # First compute the mean and std of training set for normalization.
 
 norms = {}
@@ -79,9 +95,9 @@ for filter in survey.available_filters:
     z_point = survey.get_filter(filter).zeropoint
     exp_time = survey.get_filter(filter).full_exposure_time
 
-    mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
-    norms["mu"][f"{filter}"] = np.mean(file_data[f"{filter}_phot_flux"][mask].values)
-    norms["sigma"][f"{filter}"] = np.std(file_data[f"{filter}_phot_flux"][mask].values)
+    # mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
+    norms["mu"][f"{filter}"] = np.mean(file_data[f"{filter}_phot_mag"].values)
+    norms["sigma"][f"{filter}"] = np.std(file_data[f"{filter}_phot_mag"].values)
 
 
 norms_path = os.path.join(BASE_DATA_PATH, blend_type + "_" + dataset, "norms.pkl")
@@ -97,6 +113,18 @@ for dataset in ["training", "validation"]:
     with open(data_path, "rb") as pickle_file:
         file_data = pickle.load(pickle_file)
 
+    for band in survey.available_filters:
+
+        z_point = survey.get_filter(band).zeropoint
+        exp_time = survey.get_filter(band).full_exposure_time
+
+        actual_phot_flux = file_data[f"{band}_phot_flux"].values
+        file_data[f"{band}_phot_mag"] = (
+            (actual_phot_flux * u.electron / exp_time).to(u.mag(u.electron / u.s)) + z_point
+        ).value
+
+    file_data=file_data.dropna()
+
     data = {}
     data["x"] = {}
     mask = file_data[f"{filter}_phot_flux"] / file_data[f"{filter}_phot_fluxerrs"] > 10
@@ -105,9 +133,9 @@ for dataset in ["training", "validation"]:
         z_point = survey.get_filter(filter).zeropoint
         exp_time = survey.get_filter(filter).full_exposure_time
 
-        actual_phot_mag = file_data[f"{filter}_phot_flux"].values
-        data["x"][f"{filter}_phot_flux"] = (
-            file_data[f"{filter}_phot_flux"].values - norms["mu"][f"{filter}"]
+        actual_phot_mag = file_data[f"{filter}_phot_mag"].values
+        data["x"][f"{filter}_phot_mag"] = (
+            file_data[f"{filter}_phot_mag"].values - norms["mu"][f"{filter}"]
         ) / norms["sigma"][f"{filter}"]
 
     data["x"]["flux_radius"] = file_data[f"flux_radius"].values / 10
@@ -136,7 +164,7 @@ callbacks = define_callbacks(
 )
 
 mlp_estimator.compile(
-    optimizer=tf.keras.optimizers.Adam(1e-3, clipvalue=1),
+    optimizer=tf.keras.optimizers.Adam(1e-4, clipvalue=1),
     loss=pz_loss_function,
     experimental_run_tf_function=False,
 )
