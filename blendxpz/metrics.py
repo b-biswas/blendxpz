@@ -190,7 +190,7 @@ def compute_aperture_photometry(
     theta,
     survey,
     psf_fwhm=None,
-    r=1,
+    r=1.5,
 ):
     """Calculate aperture photometry.
 
@@ -216,7 +216,7 @@ def compute_aperture_photometry(
         galcheat survey object to fetch survey details
     psf_fwhm: float
         fwhm of PSF in pixels
-    r: int
+    r: float
         factor by which the major-minor-axis is multiplied
 
     Returns

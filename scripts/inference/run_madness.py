@@ -75,7 +75,7 @@ deb = Deblender(latent_dim=16, weights_path=weights_path, survey=survey)
 psf_fwhm = []
 for band in survey.available_filters:
     filt = survey.get_filter(band)
-    psf_fwhm.append(filt.psf_fwhm.value)
+    psf_fwhm.append(filt.psf_fwhm.value / survey.pixel_scale.value)
 
 for file_num in range(num_repetations):
     LOG.info(f"\n\n######### Processing file: {file_num} #########")
@@ -206,8 +206,14 @@ for file_num in range(num_repetations):
                 blend.catalog_list[field_num]["a_d"]
                 < blend.catalog_list[field_num]["a_b"]
             )
-            a = np.where(cond, blend.catalog_list[field_num]["a_b"].value, a)
-            b = np.where(cond, blend.catalog_list[field_num]["b_b"].value, b)
+            a = (
+                np.where(cond, blend.catalog_list[field_num]["a_b"].value, a)
+                / survey.pixel_scale.value
+            )
+            b = (
+                np.where(cond, blend.catalog_list[field_num]["b_b"].value, b)
+                / survey.pixel_scale.value
+            )
             theta = np.where(
                 cond, blend.catalog_list[field_num]["pa_bulge"].value, theta
             )
@@ -224,13 +230,12 @@ for file_num in range(num_repetations):
                 madness_current_res[band_name + "_ab"] = blend.catalog_list[field_num][
                     "HSC_" + band_name
                 ]
-            a = (
-                blend.catalog_list[field_num]["flux_radius"]
-                * blend.catalog_list[field_num]["PIXEL_SCALE"]
-            )
+            a = blend.catalog_list[field_num]["flux_radius"]
             b = a
             theta = [0] * len(blend.catalog_list[field_num])
             madness_current_res["size"] = a
+            psf_fwhm = [0] * len(survey.available_filters)
+            madness_current_res["pz"] = blend.catalog_list[field_num]["ZPHOT"]
         # make this a table
 
         # madness_results.append(madness_current_res)
@@ -240,10 +245,10 @@ for file_num in range(num_repetations):
             predictions=current_field_predictions,
             xpos=blend.catalog_list[field_num]["x_peak"],
             ypos=blend.catalog_list[field_num]["y_peak"],
-            a=a / survey.pixel_scale.value,
-            b=b / survey.pixel_scale.value,
+            a=a,
+            b=b,
             theta=theta,
-            psf_fwhm=np.array(psf_fwhm) / survey.pixel_scale.value,
+            psf_fwhm=np.array(psf_fwhm),
             bkg_rms=bkg_rms,
             survey=survey,
         )
@@ -266,10 +271,10 @@ for file_num in range(num_repetations):
             predictions=blend.isolated_images[field_num],
             xpos=blend.catalog_list[field_num]["x_peak"],
             ypos=blend.catalog_list[field_num]["y_peak"],
-            a=a / survey.pixel_scale.value,
-            b=b / survey.pixel_scale.value,
+            a=a,
+            b=b,
             theta=theta,
-            psf_fwhm=np.array(psf_fwhm) / survey.pixel_scale.value,
+            psf_fwhm=np.array(psf_fwhm),
             bkg_rms=bkg_rms,
             survey=survey,
         )
@@ -293,10 +298,10 @@ for file_num in range(num_repetations):
             predictions=None,
             xpos=blend.catalog_list[field_num]["x_peak"],
             ypos=blend.catalog_list[field_num]["y_peak"],
-            a=a / survey.pixel_scale.value,
-            b=b / survey.pixel_scale.value,
+            a=a,
+            b=b,
             theta=theta,
-            psf_fwhm=np.array(psf_fwhm) / survey.pixel_scale.value,
+            psf_fwhm=np.array(psf_fwhm),
             bkg_rms=bkg_rms,
             survey=survey,
         )

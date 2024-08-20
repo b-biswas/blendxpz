@@ -6,9 +6,9 @@ from tensorflow.keras.models import Model
 
 def create_cnn_estimator(
     input_shape=[45, 45, 5],
-    filters=[32, 128, 256, 512],
-    kernels=[5, 5, 5, 5],
-    dense_layer_units=512,
+    filters=[32, 16],
+    kernels=[5, 5],
+    dense_layer_units=128,
 ):
     """Create the encoder.
 

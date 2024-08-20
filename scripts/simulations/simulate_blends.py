@@ -94,6 +94,7 @@ for real_gal_num, real_galaxy_num in enumerate(range(config["NUM_REAL_GAL_TO_USE
         data_dir_path, config["REAL_DATA_DIR"], tract + "_" + patch, "psfs"
     )
     for f in filters:
+        filt = survey.get_filter(f)
         filt.psf = lambda: btk.survey.get_psf_from_file(
             os.path.join(psf_dir, f), survey
         )
