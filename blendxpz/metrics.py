@@ -190,7 +190,7 @@ def compute_aperture_photometry(
     theta,
     survey,
     psf_fwhm=None,
-    r=0.5,
+    r=1.5,
 ):
     """Calculate aperture photometry.
 
