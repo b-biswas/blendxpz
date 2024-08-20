@@ -3,11 +3,12 @@ import os
 import pickle
 import sys
 
+import astropy.units as u
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import tensorflow_probability as tfp
 import yaml
-import astropy.units as u
 from madness_deblender.callbacks import define_callbacks
 
 from blendxpz.pz_estimators.mlp import create_mpl_estimator
@@ -18,7 +19,7 @@ from blendxpz.utils import (
     get_data_dir_path,
     get_madness_config_path,
 )
-import tensorflow_probability as tfp
+
 tfd = tfp.distributions
 
 
@@ -31,7 +32,7 @@ LOG = logging.getLogger(__name__)
 # loss func
 def pz_loss_function(y, predicted):
     # return -tfp.distributions.Normal(predicted[0], predicted[1]).log_prob(y)
-    return tf.math.abs(y - predicted)/(y+1)
+    return tf.math.abs(y - predicted) / (y + 1)
 
 
 # Take inputs
@@ -83,7 +84,7 @@ for band in survey.available_filters:
         (actual_phot_flux * u.electron / exp_time).to(u.mag(u.electron / u.s)) + z_point
     ).value
 
-file_data=file_data.dropna()
+file_data = file_data.dropna()
 
 # First compute the mean and std of training set for normalization.
 
@@ -120,10 +121,11 @@ for dataset in ["training", "validation"]:
 
         actual_phot_flux = file_data[f"{band}_phot_flux"].values
         file_data[f"{band}_phot_mag"] = (
-            (actual_phot_flux * u.electron / exp_time).to(u.mag(u.electron / u.s)) + z_point
+            (actual_phot_flux * u.electron / exp_time).to(u.mag(u.electron / u.s))
+            + z_point
         ).value
 
-    file_data=file_data.dropna()
+    file_data = file_data.dropna()
 
     data = {}
     data["x"] = {}
@@ -138,7 +140,7 @@ for dataset in ["training", "validation"]:
             file_data[f"{filter}_phot_mag"].values - norms["mu"][f"{filter}"]
         ) / norms["sigma"][f"{filter}"]
 
-    data["x"]["flux_radius"] = file_data[f"flux_radius"].values / 10
+    data["x"]["flux_radius"] = file_data["flux_radius"].values / 10
     data["x"] = pd.DataFrame(data["x"])
 
     data["y"] = file_data["pz"]

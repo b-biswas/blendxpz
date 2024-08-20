@@ -75,7 +75,7 @@ deb = Deblender(latent_dim=16, weights_path=weights_path, survey=survey)
 psf_fwhm = []
 for band in survey.available_filters:
     filt = survey.get_filter(band)
-    psf_fwhm.append(filt.psf_fwhm.value / survey.pixel_scale.value) 
+    psf_fwhm.append(filt.psf_fwhm.value / survey.pixel_scale.value)
 
 for file_num in range(num_repetations):
     LOG.info(f"\n\n######### Processing file: {file_num} #########")
@@ -206,8 +206,14 @@ for file_num in range(num_repetations):
                 blend.catalog_list[field_num]["a_d"]
                 < blend.catalog_list[field_num]["a_b"]
             )
-            a = np.where(cond, blend.catalog_list[field_num]["a_b"].value, a) / survey.pixel_scale.value
-            b = np.where(cond, blend.catalog_list[field_num]["b_b"].value, b) / survey.pixel_scale.value
+            a = (
+                np.where(cond, blend.catalog_list[field_num]["a_b"].value, a)
+                / survey.pixel_scale.value
+            )
+            b = (
+                np.where(cond, blend.catalog_list[field_num]["b_b"].value, b)
+                / survey.pixel_scale.value
+            )
             theta = np.where(
                 cond, blend.catalog_list[field_num]["pa_bulge"].value, theta
             )
