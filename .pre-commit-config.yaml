@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v5.0.0
   hooks:
     - id: end-of-file-fixer
       exclude: ^blendxpz/data/
@@ -16,20 +16,20 @@ repos:
       exclude: ^blendxpz/data/
       args: [--profile, black]
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.15.1
+  rev: v3.18.0
   hooks:
     - id: pyupgrade
       exclude: ^blendxpz/data/
       args: [--py37-plus]
 - repo: https://github.com/PyCQA/flake8
-  rev: 4.0.1
+  rev: 7.1.1
   hooks:
     - id: flake8
       exclude: ^blendxpz/data
       additional_dependencies: [flake8-typing-imports==1.7.0]
       args: ['--ignore=E501,E203,E731,W503']
 - repo: https://github.com/psf/black
-  rev: 24.3.0
+  rev: 24.10.0
   hooks:
     - id: black
       exclude: ^blendxpz/data/
@@ -46,7 +46,7 @@ repos:
 #   - id: pydocstyle
 #     args: ['--ignore=D107,D204,D213,D203']
 - repo: https://github.com/nbQA-dev/nbQA
-  rev: 1.8.4
+  rev: 1.8.7
   hooks:
    - id: nbqa-black
      additional_dependencies: [black==22.3.0]
